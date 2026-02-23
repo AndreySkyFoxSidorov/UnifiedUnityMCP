@@ -43,10 +43,10 @@
 
 | Tool/Method | Purpose | Params schema | Result schema | Unity main-thread required |
 |-------------|---------|---------------|---------------|----------------------------|
-| `unity.ping` | Basic connectivity check & version | `{}` | `{ version: string }` | No (or Yes for version) |
-| `unity.console.read` | Read Editor Console logs | `{ "maxLines": int, "typeFilter": string }` | Array of log strings | Yes |
-| `unity.editor.state` | Get/Set PlayMode state | `{ "state": string ("play","pause","stop") }` | `{ isPlaying: true }` | Yes |
-| `unity.selection.get` | Get currently selected objects | `{}` | Array of object paths/IDs | Yes |
+| `unity_ping` | Basic connectivity check & version | `{}` | `{ version: string }` | No (or Yes for version) |
+| `unity_console_read` | Read Editor Console logs | `{ "maxLines": int, "typeFilter": string }` | Array of log strings | Yes |
+| `unity_editor_state` | Get/Set PlayMode state | `{ "state": string ("play","pause","stop") }` | `{ isPlaying: true }` | Yes |
+| `unity_selection_get` | Get currently selected objects | `{}` | Array of object paths/IDs | Yes |
 | `unity.selection.set` | Set selection | `{ "instanceIds": int[] }` | Success | Yes |
 | `unity.gameobject.find` | Find objects by name or tag | `{ "name": string, "tag": string }` | Array of object info | Yes |
 | `unity.gameobject.create`| Create empty or primitive | `{ "name": string, "primitiveType": string, "parentRoute": string }`| New Object ID | Yes |
@@ -54,11 +54,11 @@
 | `unity.component.add` | Add component to object | `{ "instanceId": int, "componentType": string }` | Success | Yes |
 | `unity.asset.find` | Find assets | `{ "filter": string, "folders": string[] }` | Array of paths | Yes |
 | `unity.asset.refresh` | Refresh AssetDatabase | `{}` | Success | Yes |
-| `unity.asset.meta` | Dump/Get/Set .meta properties via Importer | `{ "action": string, "path": string, "property": string, "value": any }` | Success/List | Yes |
-| `unity.prefab.instantiate`| Instantiate prefab at path | `{ "assetPath": string, "position": object }` | New Object ID | Yes |
-| `unity.component.property`| Get/Set component properties via reflection | `{ "action": string, "instanceId": int, "property": string, "value": any }` | Success/Value | Yes |
-| `unity.scene.manage`      | Open/Save/Create scenes  | `{ "action": string, "path": string }`        | Success/State   | Yes |
-| `unity.asset.create`      | Create Materials/Folders | `{ "action": string, "path": string, "shader": string }` | Success/Path  | Yes |
-| `unity.test.run`          | Run Unity Edit/Play tests| `{ "mode": "editmode" or "playmode" }`        | Test Results    | Yes |
-| `unity.editor.execute_menu`| Execute top menu items  | `{ "menuPath": string }`                      | Success         | Yes |
-| `unity.build.manage`      | Get/Set defines, Build   | `{ "action": string, "defines": string, "buildTarget": string }` | Success/Report | Yes |
+| `unity_asset_meta` | Dump/Get/Set .meta properties via Importer | `{ "action": string, "path": string, "property": string, "value": any }` | Success/List | Yes |
+| `unity_prefab_instantiate`| Instantiate prefab at path | `{ "assetPath": string, "position": object }` | New Object ID | Yes |
+| `unity_component_property`| Get/Set component properties via reflection | `{ "action": string, "instanceId": int, "property": string, "value": any }` | Success/Value | Yes |
+| `unity_scene_manage`      | Open/Save/Create scenes  | `{ "action": string, "path": string }`        | Success/State   | Yes |
+| `unity_asset_create`      | Create Materials/Folders | `{ "action": string, "path": string, "shader": string }` | Success/Path  | Yes |
+| `unity_test_run`          | Run Unity Edit/Play tests| `{ "mode": "editmode" or "playmode" }`        | Test Results    | Yes |
+| `unity_editor_execute_menu`| Execute top menu items  | `{ "menuPath": string }`                      | Success         | Yes |
+| `unity_build_manage`      | Get/Set defines, Build   | `{ "action": string, "defines": string, "buildTarget": string }` | Success/Report | Yes |

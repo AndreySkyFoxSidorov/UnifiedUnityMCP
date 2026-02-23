@@ -10,7 +10,7 @@ namespace Mcp.Editor.Tools
 {
     public class AssetCreateTool : ITool
     {
-        public string Name => "unity.asset.create";
+        public string Name => "unity_asset_create";
         public string Description => "Create new assets (Material, Folder). Actions: 'material', 'folder'.";
 
         public JSONObject InputSchema
@@ -21,7 +21,7 @@ namespace Mcp.Editor.Tools
                 props["action"] = McpMessages.CreateStringProperty("Action: 'material', 'folder'.");
                 props["path"] = McpMessages.CreateStringProperty("Target asset path (e.g. Assets/Materials/MyMat.mat or Assets/NewFolder)");
                 props["shader"] = McpMessages.CreateStringProperty("Shader name for material (default: 'Standard' or 'Universal Render Pipeline/Lit').");
-                
+
                 var required = new JSONArray();
                 required.Add("action");
                 required.Add("path");
@@ -49,7 +49,7 @@ namespace Mcp.Editor.Tools
                     {
                         string parentFolder = Path.GetDirectoryName(path)?.Replace("\\", "/");
                         string newFolderName = Path.GetFileName(path);
-                        
+
                         if (string.IsNullOrEmpty(parentFolder)) parentFolder = "Assets";
 
                         string guid = AssetDatabase.CreateFolder(parentFolder, newFolderName);

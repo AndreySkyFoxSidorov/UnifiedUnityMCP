@@ -4,12 +4,12 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
 
 ## Core Unity Info
 
-### `unity.ping`
+### `unity_ping`
 - **Description**: Returns "pong" and the current Unity Editor version and platform. Use to ensure connection is alive.
 - **Parameters**: None `{}`
 - **Returns**: `{"content": "pong! Unity Version: 6000.3.x, Platform: WindowsEditor"}`
 
-### `unity.console.read`
+### `unity_console_read`
 - **Description**: Capture Unity Editor Console logs.
 - **Parameters**: 
   - `maxLines` (optional, int): Max number of logs to read (default 50).
@@ -18,18 +18,18 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
 
 ## Editor State
 
-### `unity.editor.state`
+### `unity_editor_state`
 - **Description**: Get current PlayMode and compile state of the Unity Editor. Very important to check before making large changes or executing menus.
 - **Parameters**: None `{}`
 - **Returns**: `{"isPlaying": false, "isPaused": false, "isCompiling": false}`
 
-### `unity.editor.set_state`
+### `unity_editor_set_state`
 - **Description**: Change the PlayMode state.
 - **Parameters**: 
   - `state` (required, string): One of `"play"`, `"pause"`, `"stop"`.
 - **Returns**: New play state status string.
 
-### `unity.editor.execute_menu`
+### `unity_editor_execute_menu`
 - **Description**: Programmatically click a menu item from the Unity Editor's top bar.
 - **Parameters**:
   - `menuPath` (required, string): Exact path, e.g., `"Assets/Create/Folder"`.
@@ -37,7 +37,7 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
 
 ## Selection
 
-### `unity.selection.get`
+### `unity_selection_get`
 - **Description**: Retrieve an array of currently selected GameObjects or Assets.
 - **Parameters**: None `{}`
 - **Returns**: `{"selected": [{"name": "Cube", "instanceId": 1234, "assetPath": "null"}]}`
@@ -81,7 +81,7 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
   - `componentType` (required, string): E.g., `"UnityEngine.Rigidbody"`, `"PlayerController"`.
 - **Returns**: Success status.
 
-### `unity.component.property`
+### `unity_component_property`
 - **Description**: Get, Set, or Dump properties of a Component via C# Reflection.
 - **Parameters**:
   - `action` (required, string): `"get"`, `"set"`, or `"dump"`.
@@ -95,7 +95,7 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
 
 ## Scenes
 
-### `unity.scene.manage`
+### `unity_scene_manage`
 - **Description**: Manage Unity scenes.
 - **Parameters**:
   - `action` (required, string): `"open"`, `"save"`, `"new"`, or `"list_build_scenes"`.
@@ -111,7 +111,7 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
   - `folders` (optional, string[]): Array of paths to limit search to.
 - **Returns**: `{"assets": ["Assets/Prefabs/Player.prefab", ...]}`
 
-### `unity.asset.create`
+### `unity_asset_create`
 - **Description**: Create specific basic assets directly.
 - **Parameters**:
   - `action` (required, string): `"folder"` or `"material"`.
@@ -119,7 +119,7 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
   - `shader` (optional, string): If material, the shader name (default `"Standard"` or URP equivalent).
 - **Returns**: New GUID or Asset Path.
 
-### `unity.asset.meta`
+### `unity_asset_meta`
 - **Description**: Interrogate and modify Unity `.meta` (Importer) settings directly.
 - **Parameters**:
   - `action` (required, string): `"dump"`, `"get"`, or `"set"`.
@@ -136,7 +136,7 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
 - **Parameters**: None `{}`
 - **Returns**: Success status.
 
-### `unity.prefab.instantiate`
+### `unity_prefab_instantiate`
 - **Description**: Spawn a Prefab asset into the scene.
 - **Parameters**:
   - `assetPath` (required, string): E.g., `"Assets/Prefabs/Player.prefab"`.
@@ -145,13 +145,13 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
 
 ## Build and Testing
 
-### `unity.test.run`
+### `unity_test_run`
 - **Description**: Execute Unity Editor tests.
 - **Parameters**:
   - `mode` (required, string): `"editmode"` or `"playmode"`.
 - **Returns**: Extensive JSON report including passed/failed counts. Note: Locks the editor during execution.
 
-### `unity.build.manage`
+### `unity_build_manage`
 - **Description**: Manage Scripting Defines, or kick off a Build.
 - **Parameters**:
   - `action` (required, string): `"get_defines"`, `"set_defines"`, `"build_player"`.

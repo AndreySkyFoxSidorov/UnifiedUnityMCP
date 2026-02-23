@@ -9,7 +9,7 @@ namespace Mcp.Editor.Tools
 {
     public class AssetMetaManageTool : ITool
     {
-        public string Name => "unity.asset.meta";
+        public string Name => "unity_asset_meta";
         public string Description => "Read or write properties inside an asset's .meta file (Importer settings) using SerializedProperty paths.";
 
         public JSONObject InputSchema

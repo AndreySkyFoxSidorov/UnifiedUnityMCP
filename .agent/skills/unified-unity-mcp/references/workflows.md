@@ -7,7 +7,7 @@ This document outlines common patterns and workflows specifically tailored to th
 ### Modifying a Light's Color or Intensity
 1. Check Editor State:
    ```json
-   unity.editor.state({})
+   unity_editor_state({})
    ```
 2. Find the Light:
    ```json
@@ -15,14 +15,14 @@ This document outlines common patterns and workflows specifically tailored to th
    ```
 3. Dump light properties to confirm field names:
    ```json
-   unity.component.property({
+   unity_component_property({
        "action": "dump",
        "instanceId": <result_from_find>
    })
    ```
 4. Find the `Light` component properties (e.g. `m_Color` or standard reflected `color` and `intensity` properties) and modify them:
    ```json
-   unity.component.property({
+   unity_component_property({
        "action": "set",
        "instanceId": <result_from_find>,
        "property": "intensity",
@@ -36,17 +36,17 @@ This document outlines common patterns and workflows specifically tailored to th
 ### Creating and Configuring a Material
 1. Create a basic material asset:
    ```json
-   unity.asset.create({
+   unity_asset_create({
        "action": "material",
        "path": "Assets/Materials/EnemyMat.mat",
        "shader": "Standard"
    })
    ```
-2. Check `unity.console.read` to ensure there were no creation errors.
+2. Check `unity_console_read` to ensure there were no creation errors.
 3. Apply the material to an object:
    ```json
    unity.gameobject.find({ "name": "Enemy" })
-   unity.component.property({
+   unity_component_property({
        "action": "set",
        "instanceId": <enemy_id>,
        "property": "sharedMaterial", // Assuming MeshRenderer
@@ -64,8 +64,8 @@ The Unified MCP Server expects you to handle C# generation through native filesy
    ```json
    unity.asset.refresh({})
    ```
-3. Poll `unity.editor.state` until `isCompiling` becomes `false`.
-4. Check `unity.console.read(maxLines=20, typeFilter="Error")` to ensure compilation succeeded.
+3. Poll `unity_editor_state` until `isCompiling` becomes `false`.
+4. Check `unity_console_read(maxLines=20, typeFilter="Error")` to ensure compilation succeeded.
 5. Create GameObject and Attach:
    ```json
    unity.gameobject.create({ "name": "Player" })
@@ -78,19 +78,19 @@ Checking automated tests and making a build directly within the editor:
 
 1. Validate Tests:
    ```json
-   unity.test.run({ "mode": "editmode" })
+   unity_test_run({ "mode": "editmode" })
    // Wait for response indicating 0 failures.
    ```
 2. Enforce Compile Settings:
    ```json
-   unity.build.manage({
+   unity_build_manage({
        "action": "set_defines",
        "defines": "RELEASE_BUILD;NO_DEBUG"
    })
    ```
 3. Create Build:
    ```json
-   unity.build.manage({
+   unity_build_manage({
        "action": "build_player",
        "buildTarget": "StandaloneWindows64"
    })
@@ -101,7 +101,7 @@ Checking automated tests and making a build directly within the editor:
 If a user asks "Perform X on the objects I have selected":
 1. Fetch selection:
    ```json
-   unity.selection.get({})
+   unity_selection_get({})
    ```
 2. Loop over the returned `instanceId` array internally in your thought process.
-3. Dispatch `unity.component.property` or `unity.gameobject.destroy` tool calls iteratively over those IDs.
+3. Dispatch `unity_component_property` or `unity.gameobject.destroy` tool calls iteratively over those IDs.

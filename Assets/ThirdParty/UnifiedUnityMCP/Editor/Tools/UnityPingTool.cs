@@ -7,7 +7,7 @@ namespace Mcp.Editor.Tools
 {
     public class UnityPingTool : ITool
     {
-        public string Name => "unity.ping";
+        public string Name => "unity_ping";
         public string Description => "Returns pong and current Unity version";
         public JSONObject InputSchema => McpMessages.CreateToolSchema(Name, Description, new JSONObject());
 

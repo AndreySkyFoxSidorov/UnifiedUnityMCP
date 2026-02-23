@@ -35,17 +35,17 @@ Write-Host "--- Testing Advanced MCP Tools ---"
 
 # 1. Properties 
 # First find directional light
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.gameobject.manage"; arguments = @{ action = "find"; name = "Directional Light" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_gameobject_manage"; arguments = @{ action = "find"; name = "Directional Light" } }
 # Assume it found the light, we want to test property tool - we will test getting 'transform' instance ID later or just reading from time? We can't guarantee ID. Let's test reading Time.time (not a component, but still). Oh wait, property tool only works on Components. We can't reliably test this without a known ID. Let's skip automatic component property test.
 
 # 2. Scene
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.scene.manage"; arguments = @{ action = "list_build_scenes" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_scene_manage"; arguments = @{ action = "list_build_scenes" } }
 
 # 3. Asset
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.asset.create"; arguments = @{ action = "folder"; path = "Assets/AdvancedToolTest" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_asset_create"; arguments = @{ action = "folder"; path = "Assets/AdvancedToolTest" } }
 
 # 4. Menu
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.editor.execute_menu"; arguments = @{ menuPath = "Edit/Play" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_editor_execute_menu"; arguments = @{ menuPath = "Edit/Play" } }
 
 # 5. Build
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.build.manage"; arguments = @{ action = "get_defines" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_build_manage"; arguments = @{ action = "get_defines" } }

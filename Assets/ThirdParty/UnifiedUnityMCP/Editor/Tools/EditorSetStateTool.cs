@@ -8,7 +8,7 @@ namespace Mcp.Editor.Tools
 {
     public class EditorSetStateTool : ITool
     {
-        public string Name => "unity.editor.set_state";
+        public string Name => "unity_editor_set_state";
         public string Description => "Sets the editor state (play, pause, stop).";
 
         public JSONObject InputSchema
@@ -17,10 +17,10 @@ namespace Mcp.Editor.Tools
             {
                 var props = new JSONObject();
                 props["state"] = McpMessages.CreateStringProperty("Desired state: 'play', 'pause', or 'stop'.");
-                
+
                 var required = new JSONArray();
                 required.Add("state");
-                
+
                 return McpMessages.CreateToolSchema(Name, Description, props, required);
             }
         }

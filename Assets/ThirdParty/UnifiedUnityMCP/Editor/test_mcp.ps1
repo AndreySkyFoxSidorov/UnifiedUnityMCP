@@ -31,9 +31,9 @@ function Send-Rpc {
     }
 }
 
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.ping"; arguments = @{} }
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.editor.state"; arguments = @{} }
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.gameobject.manage"; arguments = @{ action = "create"; name = "McpTestObj123"; primitiveType = "Cube" } }
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.gameobject.manage"; arguments = @{ action = "find"; name = "McpTestObj123" } }
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.asset.manage"; arguments = @{ action = "find"; filter = "t:Prefab" } }
-Send-Rpc -Method "tools/call" -Params @{ name = "unity.console.read"; arguments = @{ maxLines = 1 } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_ping"; arguments = @{} }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_editor_state"; arguments = @{} }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_gameobject_manage"; arguments = @{ action = "create"; name = "McpTestObj123"; primitiveType = "Cube" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_gameobject_manage"; arguments = @{ action = "find"; name = "McpTestObj123" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_asset_manage"; arguments = @{ action = "find"; filter = "t:Prefab" } }
+Send-Rpc -Method "tools/call" -Params @{ name = "unity_console_read"; arguments = @{ maxLines = 1 } }

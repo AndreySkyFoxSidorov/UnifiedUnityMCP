@@ -10,7 +10,7 @@ namespace Mcp.Editor.Tools
 {
     public class ComponentPropertyTool : ITool
     {
-        public string Name => "unity.component.property";
+        public string Name => "unity_component_property";
         public string Description => "Read or write fields/properties on a Component using reflection. Actions: 'get', 'set'. Primitive types and Vector2/3 only.";
 
         public JSONObject InputSchema
@@ -19,7 +19,7 @@ namespace Mcp.Editor.Tools
             {
                 var props = new JSONObject();
                 props["action"] = McpMessages.CreateStringProperty("Action: 'get' or 'set'.");
-                props["instanceId"] = McpMessages.CreateIntegerProperty("InstanceID of the Component (get from unity.component.manage).");
+                props["instanceId"] = McpMessages.CreateIntegerProperty("InstanceID of the Component (get from unity_component_manage).");
                 props["property"] = McpMessages.CreateStringProperty("Name of the field or property.");
                 props["value"] = new JSONObject();
                 props["value"]["description"] = "Value to set (only for 'set' action). Can be string, number, bool, or object for vectors.";
@@ -81,7 +81,7 @@ namespace Mcp.Editor.Tools
                         else if (val is Vector2 v2) res["value"] = new JSONObject { ["x"] = v2.x, ["y"] = v2.y };
                         else if (val is Color c) res["value"] = new JSONObject { ["r"] = c.r, ["g"] = c.g, ["b"] = c.b, ["a"] = c.a };
                         else res["value"] = val.ToString();
-                        
+
                         sendResponse(McpMessages.CreateToolResult(res.ToString()));
                         return;
                     }
@@ -96,7 +96,7 @@ namespace Mcp.Editor.Tools
 
                         Undo.RecordObject(comp, $"Set {propName}");
                         object finalValue = ParseValue(valueNode, memberType);
-                        
+
                         if (propInfo != null)
                         {
                             if (!propInfo.CanWrite)
@@ -136,7 +136,7 @@ namespace Mcp.Editor.Tools
             if (targetType == typeof(double)) return node.AsDouble;
             if (targetType == typeof(bool)) return node.AsBool;
             if (targetType == typeof(string)) return node.Value;
-            
+
             if (targetType == typeof(Vector3) && node.IsObject)
             {
                 var obj = node.AsObject;
@@ -152,7 +152,7 @@ namespace Mcp.Editor.Tools
                 var obj = node.AsObject;
                 return new Color(obj["r"].AsFloat, obj["g"].AsFloat, obj["b"].AsFloat, obj["a"].AsFloat);
             }
-            
+
             // Fallback for enums
             if (targetType.IsEnum)
             {

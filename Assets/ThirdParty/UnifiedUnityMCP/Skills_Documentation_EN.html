@@ -168,7 +168,7 @@
                 </div>
                 <div class="mcp-tool">
                     <strong>Other (Tests, Logs, Builds)</strong><br>
-                    Running <code>unity.test.run</code>, injecting #define symbols via <code>unity.build.manage</code>,
+                    Running <code>unity_test_run</code>, injecting #define symbols via <code>unity_build_manage</code>,
                     subscribing to Debug.Log.
                 </div>
             </div>
@@ -347,9 +347,9 @@
                     <ul>
                         <li><code>Act as a 'unity-performance' expert. Use the MCP to check the materials on all Environment meshes and turn on GPU Instancing for all of them using reflection.</code>
                         </li>
-                        <li><code>Review my project for mobile deployment using 'unity-mobile' standards. Check the Texture Importer settings using 'unity.asset.meta' and ensure large UI sprites are using ASTC 6x6 compression.</code>
+                        <li><code>Review my project for mobile deployment using 'unity-mobile' standards. Check the Texture Importer settings using 'unity_asset_meta' and ensure large UI sprites are using ASTC 6x6 compression.</code>
                         </li>
-                        <li><code>Use the MCP 'unity.console.read' tool to monitor my scene for 10 seconds. Identify if any scripts are wildly spamming Debug.Log and causing CPU bottlenecks.</code>
+                        <li><code>Use the MCP 'unity_console_read' tool to monitor my scene for 10 seconds. Identify if any scripts are wildly spamming Debug.Log and causing CPU bottlenecks.</code>
                         </li>
                         <li><code>I have 30 identical trees in the scene. Use the MCP tools to find them all by their 'Tree' tag, and parent them under a single empty 'Environment' GameObject to clean up the hierarchy.</code>
                         </li>
@@ -360,19 +360,19 @@
                 <div class="card">
                     <h3>🛠️ Scene and Object Manipulations (unity-skills-index)</h3>
                     <ul>
-                        <li><code>Use the 'unity.gameobject.find' tool to find the GameObject named 'PlayerSpotlight'. Then use 'unity.component.property' to dynamically change its Light intensity to 12.5 and its color to pure Red.</code>
+                        <li><code>Use the 'unity.gameobject.find' tool to find the GameObject named 'PlayerSpotlight'. Then use 'unity_component_property' to dynamically change its Light intensity to 12.5 and its color to pure Red.</code>
                         </li>
                         <li><code>I need to set up a Cinemachine Virtual Camera focusing on the Player. Instantiate the VCam prefab, then use reflection to set its Follow and LookAt targets to the Player's instanceId.</code>
                         </li>
-                        <li><code>Check the 'unity.editor.state'. If it is not compiling, trigger a full 'unity.test.run' on PlayMode. Output the results of any failed tests.</code>
+                        <li><code>Check the 'unity_editor_state'. If it is not compiling, trigger a full 'unity_test_run' on PlayMode. Output the results of any failed tests.</code>
                         </li>
-                        <li><code>Use the 'unity.asset.create' tool to scaffold 3 new empty folders in my project: Assets/Art/Characters, Assets/Audio/SFX, and Assets/Data/Configs.</code>
+                        <li><code>Use the 'unity_asset_create' tool to scaffold 3 new empty folders in my project: Assets/Art/Characters, Assets/Audio/SFX, and Assets/Data/Configs.</code>
                         </li>
-                        <li><code>Find all GameObjects with the 'BoxCollider' component attached. For each one, use 'unity.component.property' to set their 'isTrigger' boolean to true.</code>
+                        <li><code>Find all GameObjects with the 'BoxCollider' component attached. For each one, use 'unity_component_property' to set their 'isTrigger' boolean to true.</code>
                         </li>
                         <li><code>Read the instructions in 'unity-skills-index/navmesh' to understand the parameters. Then, bake a new navigation mesh for the current scene geometry.</code>
                         </li>
-                        <li><code>Save my current scene using 'unity.scene.manage', then open 'Assets/Scenes/Level_02.unity'. Once opened, find the 'SpawnPoint' object and move it to coordinates 10, 0, 50.</code>
+                        <li><code>Save my current scene using 'unity_scene_manage', then open 'Assets/Scenes/Level_02.unity'. Once opened, find the 'SpawnPoint' object and move it to coordinates 10, 0, 50.</code>
                         </li>
                     </ul>
                 </div>

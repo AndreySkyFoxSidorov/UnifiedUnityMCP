@@ -8,7 +8,7 @@ namespace Mcp.Editor.Tools
 {
     public class ExecuteMenuTool : ITool
     {
-        public string Name => "unity.editor.execute_menu";
+        public string Name => "unity_editor_execute_menu";
         public string Description => "Executes a specified menu item from the Unity Editor's top menu.";
 
         public JSONObject InputSchema

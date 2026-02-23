@@ -59,5 +59,5 @@ curl -X POST http://127.0.0.1:18008/mcp \
 ```bash
 curl -X POST http://127.0.0.1:18008/mcp \
      -H "Content-Type: application/json" \
-     -d '{"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "unity.ping", "arguments": {}}}'
+     -d '{"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "unity_ping", "arguments": {}}}'
 ```

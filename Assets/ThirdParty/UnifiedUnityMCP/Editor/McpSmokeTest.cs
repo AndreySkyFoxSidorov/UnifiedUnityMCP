@@ -85,13 +85,13 @@ namespace Mcp.Editor.Tests
                         return;
                     }
 
-                    // Test 3: tools/call (unity.ping)
+                    // Test 3: tools/call (unity_ping)
                     var invokeReq = new JSONObject();
                     invokeReq["jsonrpc"] = "2.0";
                     invokeReq["id"] = 3;
                     invokeReq["method"] = "tools/call";
                     var invokeParams = new JSONObject();
-                    invokeParams["name"] = "unity.ping";
+                    invokeParams["name"] = "unity_ping";
                     invokeParams["arguments"] = new JSONObject();
                     invokeReq["params"] = invokeParams;
 
@@ -105,7 +105,7 @@ namespace Mcp.Editor.Tests
                     
                     if (!string.IsNullOrEmpty(pingResult) && pingResult.Contains("pong"))
                     {
-                        Debug.Log($"[MCP SmokeTest] tools/call (unity.ping) OK! Result: {pingResult}");
+                        Debug.Log($"[MCP SmokeTest] tools/call (unity_ping) OK! Result: {pingResult}");
                     }
                     else
                     {

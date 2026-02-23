@@ -8,7 +8,7 @@ namespace Mcp.Editor.Tools
 {
     public class AssetManageTool : ITool
     {
-        public string Name => "unity.asset.manage";
+        public string Name => "unity_asset_manage";
         public string Description => "Manage assets directly. Actions: 'find', 'refresh'.";
 
         public JSONObject InputSchema
@@ -18,10 +18,10 @@ namespace Mcp.Editor.Tools
                 var props = new JSONObject();
                 props["action"] = McpMessages.CreateStringProperty("Action: 'find', 'refresh'.");
                 props["filter"] = McpMessages.CreateStringProperty("Use with 'find': filter string for AssetDatabase.FindAssets.");
-                
+
                 var required = new JSONArray();
                 required.Add("action");
-                
+
                 return McpMessages.CreateToolSchema(Name, Description, props, required);
             }
         }

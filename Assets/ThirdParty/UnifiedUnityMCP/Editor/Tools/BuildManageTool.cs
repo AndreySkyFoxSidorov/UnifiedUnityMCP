@@ -9,7 +9,7 @@ namespace Mcp.Editor.Tools
 {
     public class BuildManageTool : ITool
     {
-        public string Name => "unity.build.manage";
+        public string Name => "unity_build_manage";
         public string Description => "Manage Scripting Defines and Trigger Builds. Actions: 'get_defines', 'set_defines', 'build_player'.";
 
         public JSONObject InputSchema

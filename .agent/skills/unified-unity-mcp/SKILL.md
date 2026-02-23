@@ -17,19 +17,19 @@ This skill helps you effectively drive the Unity Editor using the Unified MCP to
 Examples in `references/workflows.md` and `references/tools-reference.md` are generic templates. Adapt names, exact component paths, and properties to the specific project hierarchy.
 
 Before applying a template:
-- Validate targets by using `unity.gameobject.find` or `unity.selection.get`.
-- Verify Editor states via `unity.editor.state` before pushing major code chunks or initiating playmode.
+- Validate targets by using `unity.gameobject.find` or `unity_selection_get`.
+- Verify Editor states via `unity_editor_state` before pushing major code chunks or initiating playmode.
 
 ## Quick Start: Verification-First Workflow
 
 **Always verify state and existence before modifying.**
 
 ```
-1. Check editor state     → unity.editor.state (ensure we aren't compiling or playing)
+1. Check editor state     → unity_editor_state (ensure we aren't compiling or playing)
 2. Find what you need     → unity.gameobject.find or unity.asset.find
-3. Read current values    → unity.component.property (action="dump") or unity.asset.meta (action="dump")
-4. Take action            → unity.gameobject.create, unity.component.property (action="set"), unity.prefab.instantiate
-5. Verify results         → unity.console.read
+3. Read current values    → unity_component_property (action="dump") or unity_asset_meta (action="dump")
+4. Take action            → unity.gameobject.create, unity_component_property (action="set"), unity_prefab_instantiate
+5. Verify results         → unity_console_read
 ```
 
 ## Critical Best Practices
@@ -37,7 +37,7 @@ Before applying a template:
 ### 1. Check Editor State Before Complex Operations
 Always ensure Unity is ready for commands, especially before running tests, entering PlayMode, or building.
 ```python
-state = unity.editor.state()
+state = unity_editor_state()
 # Ensure isCompiling == false before taking actions that depend on script changes.
 ```
 
@@ -45,8 +45,8 @@ state = unity.editor.state()
 The Unified MCP Server does *not* have a built-in `create_script` tool. You must use your standard environment tools (like `write_to_file` and `replace_file_content`) to create and modify `.cs` scripts in the `Assets/` directory.
 After modifying a script:
 1. Call `unity.asset.refresh()` to force Unity to compile.
-2. Poll `unity.editor.state()` until `isCompiling` is false.
-3. Read `unity.console.read()` to check for syntax errors.
+2. Poll `unity_editor_state()` until `isCompiling` is false.
+3. Read `unity_console_read()` to check for syntax errors.
 
 ## Complete Tools Usage Guide
 
@@ -67,7 +67,7 @@ Here is a detailed breakdown of how to use the specific tools in the Unified MCP
 
 *   **`unity.component.add`**: Attaches a new script or native component to an object.
     *   *Example payload*: `{"instanceId": 1234, "componentType": "UnityEngine.BoxCollider"}`
-*   **`unity.component.property`**: This tool leverages deep reflection to read or modify any public/private field on a component. You must know the exact C# property name.
+*   **`unity_component_property`**: This tool leverages deep reflection to read or modify any public/private field on a component. You must know the exact C# property name.
     *   *Dump Strategy*: First, dump all readable properties to understand exact names/types:
         `{"action": "dump", "instanceId": 1234, "property": ""}`
     *   *Set Action (Numbers/Bools/Strings)*: Note the exact name, then modify it:
@@ -80,35 +80,35 @@ Here is a detailed breakdown of how to use the specific tools in the Unified MCP
 
 *   **`unity.asset.find`**: Search for assets globally using standard Unity search filters.
     *   *Example payload*: `{"filter": "t:Texture2D", "folders": ["Assets/Textures"]}`
-*   **`unity.prefab.instantiate`**: Spawn a Prefab asset into the scene.
+*   **`unity_prefab_instantiate`**: Spawn a Prefab asset into the scene.
     *   *Example payload*: `{"assetPath": "Assets/Prefabs/Player.prefab", "position": {"x":10, "y":0, "z":0}}`
     *   *Usage*: Returns the `instanceId` of the new root object for further configuration.
-*   **`unity.asset.create`**: Directly scaffold folders and materials without parsing YAML.
+*   **`unity_asset_create`**: Directly scaffold folders and materials without parsing YAML.
     *   *Example payload*: `{"action": "material", "path": "Assets/Materials/Red.mat", "shader": "Standard"}`
-*   **`unity.asset.meta`**: Interrogate and modify Unity `.meta` (Importer) settings directly—do NOT attempt to parse YAML manually.
+*   **`unity_asset_meta`**: Interrogate and modify Unity `.meta` (Importer) settings directly—do NOT attempt to parse YAML manually.
     *   *Dump parameters*: `{"action": "dump", "path": "Assets/Textures/Icon.png"}`
     *   *Set Setting*: `{"action": "set", "path": "Assets/Textures/Icon.png", "property": "m_TextureSettings.m_FilterMode", "value": 1}`
 
 ### 4. Scene & Selection Control
 
-*   **`unity.scene.manage`**: Open, save, or construct scenes.
+*   **`unity_scene_manage`**: Open, save, or construct scenes.
     *   *Example payload*: `{"action": "open", "path": "Assets/Scenes/Level1.unity"}`
     *   *Usage*: Always save the current scene `{"action": "save"}` before opening a new one to prevent data loss.
-*   **`unity.selection.get` / `unity.selection.set`**: See what the human developer has selected in the Editor right now, or force the selection to highlight an object you just created.
+*   **`unity_selection_get` / `unity.selection.set`**: See what the human developer has selected in the Editor right now, or force the selection to highlight an object you just created.
     *   *Get payload*: `{}` -> Returns active `instanceId` array.
     *   *Set payload*: `{"instanceIds": [1234]}`
 
 ### 5. Editor Automation & Diagnostics
 
-*   **`unity.editor.execute_menu`**: Clicks a button in the top menu bar.
+*   **`unity_editor_execute_menu`**: Clicks a button in the top menu bar.
     *   *Example payload*: `{"menuPath": "Assets/Create/Folder"}`
     *   *Usage*: Note that if the path is invalid, Unity logs a severe native stack trace. Ensure exact spelling.
-*   **`unity.console.read`**: Grabs the latest log entries. Vital for debugging compilation loops.
+*   **`unity_console_read`**: Grabs the latest log entries. Vital for debugging compilation loops.
     *   *Example payload*: `{"maxLines": 50, "typeFilter": "Error"}`
-*   **`unity.test.run`**: Triggers Unity Test Runner (NUnit).
+*   **`unity_test_run`**: Triggers Unity Test Runner (NUnit).
     *   *Example payload*: `{"mode": "playmode"}`
     *   *Usage*: Editor will freeze while tests run, returning a comprehensive JSON report of success/failure contexts.
-*   **`unity.build.manage`**: Inject `#define` symbols or trigger project builds.
+*   **`unity_build_manage`**: Inject `#define` symbols or trigger project builds.
     *   *Example payload*: `{"action": "set_defines", "defines": "DEBUG;PROFILING"}`
 
 ## Reference Files

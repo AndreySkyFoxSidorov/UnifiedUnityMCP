@@ -9,7 +9,7 @@ namespace Mcp.Editor.Tools
 {
     public class PrefabManageTool : ITool
     {
-        public string Name => "unity.prefab.instantiate";
+        public string Name => "unity_prefab_instantiate";
         public string Description => "Instantiate a prefab from an asset path into the active scene.";
 
         public JSONObject InputSchema
@@ -18,10 +18,10 @@ namespace Mcp.Editor.Tools
             {
                 var props = new JSONObject();
                 props["assetPath"] = McpMessages.CreateStringProperty("Path to the prefab (e.g. 'Assets/Prefabs/MyPrefab.prefab').");
-                
+
                 var required = new JSONArray();
                 required.Add("assetPath");
-                
+
                 return McpMessages.CreateToolSchema(Name, Description, props, required);
             }
         }
@@ -52,7 +52,7 @@ namespace Mcp.Editor.Tools
                         sendError($"Failed to instantiate prefab from '{assetPath}'.");
                         return;
                     }
-                    
+
                     Undo.RegisterCreatedObjectUndo(instance, $"Instantiate {prefab.name}");
                     Selection.activeGameObject = instance;
 

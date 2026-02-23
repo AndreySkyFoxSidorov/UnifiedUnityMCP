@@ -10,7 +10,7 @@ namespace Mcp.Editor.Tools
 {
     public class ConsoleGetLogsTool : ITool
     {
-        public string Name => "unity.console.read";
+        public string Name => "unity_console_read";
         public string Description => "Reads Unity Editor Console logs. specify maxLines to limit output.";
 
         public JSONObject InputSchema

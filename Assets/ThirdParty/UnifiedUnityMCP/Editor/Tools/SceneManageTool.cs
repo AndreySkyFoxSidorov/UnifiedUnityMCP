@@ -10,7 +10,7 @@ namespace Mcp.Editor.Tools
 {
     public class SceneManageTool : ITool
     {
-        public string Name => "unity.scene.manage";
+        public string Name => "unity_scene_manage";
         public string Description => "Manage levels/scenes. Actions: 'open', 'save', 'new', 'list_build_scenes'.";
 
         public JSONObject InputSchema

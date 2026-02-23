@@ -8,7 +8,7 @@ namespace Mcp.Editor.Tools
 {
     public class EditorGetStateTool : ITool
     {
-        public string Name => "unity.editor.state";
+        public string Name => "unity_editor_state";
         public string Description => "Returns current Editor play mode state (isPlaying, isPaused, isCompiling).";
 
         public JSONObject InputSchema => McpMessages.CreateToolSchema(Name, Description, new JSONObject());
@@ -21,7 +21,7 @@ namespace Mcp.Editor.Tools
                 result["isPlaying"] = EditorApplication.isPlaying;
                 result["isPaused"] = EditorApplication.isPaused;
                 result["isCompiling"] = EditorApplication.isCompiling;
-                
+
                 sendResponse(McpMessages.CreateToolResult(result.ToString()));
             });
         }

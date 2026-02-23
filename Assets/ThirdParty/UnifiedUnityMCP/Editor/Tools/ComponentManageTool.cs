@@ -9,7 +9,7 @@ namespace Mcp.Editor.Tools
 {
     public class ComponentManageTool : ITool
     {
-        public string Name => "unity.component.manage";
+        public string Name => "unity_component_manage";
         public string Description => "Manage components on GameObjects. Actions: 'add', 'remove', 'list'.";
 
         public JSONObject InputSchema

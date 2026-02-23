@@ -11,7 +11,7 @@ namespace Mcp.Editor.Tools
 {
     public class GameObjectManageTool : ITool
     {
-        public string Name => "unity.gameobject.manage";
+        public string Name => "unity_gameobject_manage";
         public string Description => "CRUD operations for GameObjects in the scene. Actions: 'find', 'create', 'destroy'.";
 
         public JSONObject InputSchema

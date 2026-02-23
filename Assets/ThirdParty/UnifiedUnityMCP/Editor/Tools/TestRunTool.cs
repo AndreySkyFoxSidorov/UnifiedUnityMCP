@@ -11,7 +11,7 @@ namespace Mcp.Editor.Tools
 {
     public class TestRunTool : ITool, ICallbacks
     {
-        public string Name => "unity.test.run";
+        public string Name => "unity_test_run";
         public string Description => "Run Unity Tests (EditMode or PlayMode) and get results.";
 
         private Action<JSONObject> _currentResponseCallback;
