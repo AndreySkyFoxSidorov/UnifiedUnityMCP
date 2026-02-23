@@ -1,0 +1,10 @@
+{
+	"mcpServers": {
+		"unityMCP": {
+			"type": "streamable-http",
+			"url": "http://127.0.0.1:18008/mcp",
+			"disabled": false,
+			"alwaysAllow": []
+		}
+	}
+}

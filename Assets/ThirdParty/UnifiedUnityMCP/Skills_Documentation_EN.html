@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills Base & MCP Server Documentation (Unity)</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #38bdf8;
+            --border-color: #334155;
+            --badge-bg: #475569;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            border: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #fff;
+            border-bottom: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge {
+            background-color: var(--badge-bg);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #cbd5e1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: var(--accent-color);
+        }
+
+        .mcp-tools {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .mcp-tool {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 3px solid var(--accent-color);
+            padding: 10px 15px;
+        }
+
+        code {
+            background-color: #000;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #fca5a5;
+        }
+
+        .section-box {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🚀 Knowledge & Skills Base (Skills & MCP)</h1>
+        <p style="text-align: center; color: #94a3b8; font-size: 1.1em;">Global infrastructure for automating the
+            Unity Editor using Artificial Intelligence (Antigravity & Unified MCP)</p>
+
+        <!-- MCP Server Section -->
+        <div class="section-box">
+            <h2>🔌 Unified Unity MCP Server</h2>
+            <p>Our optimized Model Context Protocol server that provides direct, secure, and strictly typed
+                control over Unity objects from the AI chat.</p>
+
+            <div class="mcp-tools">
+                <div class="mcp-tool">
+                    <strong>unity.gameobject.*</strong><br>
+                    Search (including returning <code>instanceId</code>), creation (primitives, empty objects), and
+                    deletion of GameObject hierarchies.
+                </div>
+                <div class="mcp-tool">
+                    <strong>unity.component.*</strong><br>
+                    Higher level control: adding components and manipulating properties through deep C#
+                    reflection (changing coordinates, colliders, colors, scripts).
+                </div>
+                <div class="mcp-tool">
+                    <strong>unity.asset.*</strong><br>
+                    Direct modification of <code>.meta</code> files (e.g., texture compression, image filters) without
+                    parsing YAML, as well as searching the AssetDatabase.
+                </div>
+                <div class="mcp-tool">
+                    <strong>unity.scene.* / unity.prefab.*</strong><br>
+                    Saving/opening scenes in the Editor. Instantiating existing prefabs into the active scene.
+                </div>
+                <div class="mcp-tool">
+                    <strong>unity.editor.*</strong><br>
+                    Checking Editor status (whether compilation is ongoing), executing menu items (Execute Menu), and
+                    changing active selection (Selection).
+                </div>
+                <div class="mcp-tool">
+                    <strong>Other (Tests, Logs, Builds)</strong><br>
+                    Running <code>unity.test.run</code>, injecting #define symbols via <code>unity.build.manage</code>,
+                    subscribing to Debug.Log.
+                </div>
+            </div>
+        </div>
+
+        <!-- Core Skills Section -->
+        <div class="section-box">
+            <h2>🧠 Core Developer Skills</h2>
+            <p>Main instruction skills (Prompts & Skills) that teach AI the best architectural practices for development
+                in Unity and C#.</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>csharp-pro <span class="badge">C# 9.0+</span></h3>
+                    <p>Teaches AI modern C#: using records, pattern matching, memory optimization (span, value
+                        types), and SOLID principles.</p>
+                </div>
+                <div class="card">
+                    <h3>csharp-async-patterns <span class="badge">Async/Await</span></h3>
+                    <p>Strict asynchronous standards: proper cancellation via <code>CancellationToken</code>,
+                        using <code>ConfigureAwait</code>, avoiding <code>async void</code>.</p>
+                </div>
+                <div class="card">
+                    <h3>unity-developer <span class="badge">Architecture</span></h3>
+                    <p>Development lead. Component-based approach, caching via <code>TryGetComponent</code>,
+                        using Addressables, ScriptableObjects, and State Machine patterns.</p>
+                </div>
+                <div class="card">
+                    <h3>unity-async <span class="badge">Unity Threading</span></h3>
+                    <p>Threading specifics in Unity. Delegating coroutines (legacy) and Tasks (modern), ensuring
+                        Unity API calls strictly on the Main Thread.</p>
+                </div>
+                <div class="card">
+                    <h3>unity-performance & mobile <span class="badge">Optimization</span></h3>
+                    <p>FPS optimization for smartphones. Using IL2CPP, layout batching (Draw Calls & SRP
+                        Batcher), Occlusion Culling, and texture compression (ASTC/ETC2).</p>
+                </div>
+                <div class="card">
+                    <h3>unity-collection-pool <span class="badge">Zero-Allocation</span></h3>
+                    <p>A skill that trains AI to completely avoid Garbage Collection drops by using ListPool, DictionaryPool from <code>UnityEngine.Pool</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- UI & Presentation Section -->
+        <div class="section-box">
+            <h2>🎨 UI Skills (UI & UI Automation)</h2>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>unity-ui-creator <span class="badge">GUI Layout</span></h3>
+                    <p>The absolute expert in Screen/HUD/Menu layout in Unity. Teaches to create the correct Canvas hierarchy
+                        with Anchors, adapt to different screens (Landscape/Portrait, notches), and avoid Layout "flickering".</p>
+                </div>
+                <div class="card">
+                    <h3>unity-ui-layout-automation <span class="badge">Auto-validation</span></h3>
+                    <p>Scripts and instructions for automatic validation of Canvas structure, adding text localization, and
+                        checking for animations via MCP.</p>
+                </div>
+                <div class="card">
+                    <h3>unity-textmeshpro <span class="badge">Typography</span></h3>
+                    <p>Deep knowledge of TMPro profiling: creating Font Assets, Rich Text, materials for shadows/highlights.</p>
+                </div>
+                <div class="card">
+                    <h3>csharp-xml-docs <span class="badge">Documentation</span></h3>
+                    <p>Strict standard for automatic XML documentation: creating clear <code>summary</code>,
+                        <code>param</code>, <code>returns</code> in pure English without fluff (Haiku Style).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Grand Index Section -->
+        <div class="section-box">
+            <h2>🛠 The Grand Unity Hierarchy (unity-skills-index)</h2>
+            <p>A giant educational reference manual divided into 35+ micro-skills. <strong>Important:</strong> The AI
+                uses these knowledges as a <em>"What to do" reference</em>, but it automatically <em>translates</em>
+                commands via the Unified Unity MCP Server using a special mapping table.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sub-Skill</th>
+                        <th>Description (Area of Responsibility)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>gameobject</code>, <code>component</code>, <code>prefab</code></td>
+                        <td>Main object manipulations: hierarchical creation, script attachment, and prefab spawning.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>scene</code>, <code>asset</code>, <code>importer</code></td>
+                        <td>Loading scenes, moving objects via directories in the AssetDatabase, configuring texture/audio/model compression.</td>
+                    </tr>
+                    <tr>
+                        <td><code>material</code>, <code>shader</code>, <code>light</code></td>
+                        <td>Setting colors/textures in materials, creating custom shaders, configuring global lighting.</td>
+                    </tr>
+                    <tr>
+                        <td><code>physics</code>, <code>navmesh</code>, <code>terrain</code></td>
+                        <td>Executing Raycasts, configuring colliders and gravity, baking pathways for artificial
+                            intelligence, sculpting forests/mountains on Terrain.</td>
+                    </tr>
+                    <tr>
+                        <td><code>editor</code>, <code>camera</code>, <code>console</code></td>
+                        <td>Managing the Editor itself: Play Mode, selection, moving the camera in the Scene view,
+                            searching for errors in the console.</td>
+                    </tr>
+                    <tr>
+                        <td><code>cinemachine</code>, <code>timeline</code>, <code>animator</code></td>
+                        <td>Configuring virtual and follow cameras (Follow/LookAt), generating cutscenes, creating
+                            animation controllers.</td>
+                    </tr>
+                    <tr>
+                        <td><code>ui</code>, <code>event</code>, <code>scriptableobject</code></td>
+                        <td>Building buttons, configuring onClick() events for UI, generating and editing
+                            ScriptableObject (as game config database).</td>
+                    </tr>
+                    <tr>
+                        <td><code>optimization</code>, <code>profiler</code>, <code>validation</code></td>
+                        <td>Checking the project for "broken" scripts and missing references, collecting performance stats.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>smart</code>, <code>cleaner</code>, <code>perception</code></td>
+                        <td>Smart SQL queries for objects inside the scene (search by color or layer), removing
+                            dead or duplicated code, analyzing scene dependencies.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 💡 English Prompts Examples Section -->
+        <div class="section-box">
+            <h2>💡 Effective Prompts Examples (English Prompts)</h2>
+            <p>Below are 20 examples of perfect queries (prompts) in English. They allow the AI to use the embedded
+                skills and Unified MCP server as efficiently as possible.</p>
+
+            <div class="grid" style="grid-template-columns: 1fr;">
+                <!-- UI & Canvas -->
+                <div class="card">
+                    <h3>🖥️ UI and Layout Skills (unity-ui-creator, textmeshpro)</h3>
+                    <ul>
+                        <li><code>Use the 'unity-ui-creator' skill. Build a highly responsive "Settings Menu" screen in the UI scene. It should have a background panel, vertical layout group in the center, 3 buttons (Audio, Graphics, Gameplay), and a close button anchored to the top right. Test it on 16:9 and notch displays.</code>
+                        </li>
+                        <li><code>I need a ScrollView for an inventory system. Please structure the prefabs correctly, removing any unnecessary ContentSizeFitters to ensure 60fps scrolling.</code>
+                        </li>
+                        <li><code>Use 'unity-textmeshpro' to create a stylized "Game Over" title text. Apply a gold metallic material preset with a subtle drop shadow and ensure the font asset supports rich text formatting.</code>
+                        </li>
+                        <li><code>Validate my HUD canvas hierarchy using the 'unity-ui-layout-automation' checks. injected the missing UIAnimationBehaviour to the root if needed.</code>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Architecture & C# -->
+                <div class="card">
+                    <h3>🧩 Architecture and C# (unity-developer, csharp-pro)</h3>
+                    <ul>
+                        <li><code>Act as a 'unity-developer'. I need to implement a state machine for my boss enemy. Use modern C# 9.0 features like pattern matching and switch expressions to handle phase transitions.</code>
+                        </li>
+                        <li><code>Refactor my DataService layer using 'csharp-async-patterns'. Remove all 'async void' methods except for UI click handlers, and ensure every web request properly accepts a CancellationToken.</code>
+                        </li>
+                        <li><code>Use 'unity-collection-pool' to rewrite my projectile spawner. Currently, it allocates a new List every frame. Replace it with ListPool from UnityEngine.Pool to eliminate Garbage Collection spikes completely.</code>
+                        </li>
+                        <li><code>Apply 'csharp-code-style' to the entirely of the CombatManager.cs script. Fix all naming conventions so that private fields use the 'm' prefix and booleans use the 'b' prefix.</code>
+                        </li>
+                        <li><code>Generate XML documentation for the IPlayerInventory interface using the 'csharp-xml-docs' Haiku style. Keep it concise, remove all redundant words, and use active voice.</code>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Optimization & Mobile -->
+                <div class="card">
+                    <h3>🔋 Optimization and Mobile (unity-performance, unity-mobile)</h3>
+                    <ul>
+                        <li><code>Act as a 'unity-performance' expert. Use the MCP to check the materials on all Environment meshes and turn on GPU Instancing for all of them using reflection.</code>
+                        </li>
+                        <li><code>Review my project for mobile deployment using 'unity-mobile' standards. Check the Texture Importer settings using 'unity.asset.meta' and ensure large UI sprites are using ASTC 6x6 compression.</code>
+                        </li>
+                        <li><code>Use the MCP 'unity.console.read' tool to monitor my scene for 10 seconds. Identify if any scripts are wildly spamming Debug.Log and causing CPU bottlenecks.</code>
+                        </li>
+                        <li><code>I have 30 identical trees in the scene. Use the MCP tools to find them all by their 'Tree' tag, and parent them under a single empty 'Environment' GameObject to clean up the hierarchy.</code>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- The Grand Index (Scene, Prefabs, Editor) -->
+                <div class="card">
+                    <h3>🛠️ Scene and Object Manipulations (unity-skills-index)</h3>
+                    <ul>
+                        <li><code>Use the 'unity.gameobject.find' tool to find the GameObject named 'PlayerSpotlight'. Then use 'unity.component.property' to dynamically change its Light intensity to 12.5 and its color to pure Red.</code>
+                        </li>
+                        <li><code>I need to set up a Cinemachine Virtual Camera focusing on the Player. Instantiate the VCam prefab, then use reflection to set its Follow and LookAt targets to the Player's instanceId.</code>
+                        </li>
+                        <li><code>Check the 'unity.editor.state'. If it is not compiling, trigger a full 'unity.test.run' on PlayMode. Output the results of any failed tests.</code>
+                        </li>
+                        <li><code>Use the 'unity.asset.create' tool to scaffold 3 new empty folders in my project: Assets/Art/Characters, Assets/Audio/SFX, and Assets/Data/Configs.</code>
+                        </li>
+                        <li><code>Find all GameObjects with the 'BoxCollider' component attached. For each one, use 'unity.component.property' to set their 'isTrigger' boolean to true.</code>
+                        </li>
+                        <li><code>Read the instructions in 'unity-skills-index/navmesh' to understand the parameters. Then, bake a new navigation mesh for the current scene geometry.</code>
+                        </li>
+                        <li><code>Save my current scene using 'unity.scene.manage', then open 'Assets/Scenes/Level_02.unity'. Once opened, find the 'SpawnPoint' object and move it to coordinates 10, 0, 50.</code>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <p style="text-align: center; color: #64748b; font-size: 0.9em;">Generated by Artificial Intelligence "Antigravity". Data is up to date and consistent with the Unified MCP Architecture.</p>
+
+    </div>
+
+</body>
+
+</html>
