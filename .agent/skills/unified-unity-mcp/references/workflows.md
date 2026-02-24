@@ -1,6 +1,6 @@
 # Unified Unity MCP Workflows
 
-This document outlines common patterns and workflows specifically tailored to the Unified Unity MCP Server's native `unity.*` tool endpoints.
+This document outlines common patterns and workflows specifically tailored to the Unified Unity MCP Server's native Unified MCP tool endpoints.
 
 ## Scene Introspection & Modification
 

@@ -2,7 +2,9 @@
 name: unity-performance
 description: Optimize Unity game performance through profiling, draw call reduction, and resource management. Masters batching, LOD, occlusion culling, and mobile optimization. Use for performance bottlenecks, frame rate issues, or optimization strategies.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
+  - unity-csharp-fundamentals
+  - unity-collection-pool
 ---
 
 # Unity Performance Optimization
@@ -62,25 +64,25 @@ using (ListPool<Enemy>.Get(out enemies))
 ## Optimization Checklist
 
 ### CPU Optimization
-- ✅ Reduce Update/FixedUpdate calls
-- ✅ Object pooling for frequently spawned objects
-- ✅ Cache component references in Awake/Start
-- ✅ Use events instead of polling
+- [CORRECT] Reduce Update/FixedUpdate calls
+- [CORRECT] Object pooling for frequently spawned objects
+- [CORRECT] Cache component references in Awake/Start
+- [CORRECT] Use events instead of polling
 
 ### GPU Optimization
-- ✅ Static batching for static objects
-- ✅ GPU instancing for identical meshes
-- ✅ Reduce SetPass calls via material sharing
-- ✅ LOD groups for distant objects
-- ✅ Occlusion culling for large scenes
+- [CORRECT] Static batching for static objects
+- [CORRECT] GPU instancing for identical meshes
+- [CORRECT] Reduce SetPass calls via material sharing
+- [CORRECT] LOD groups for distant objects
+- [CORRECT] Occlusion culling for large scenes
 
 ### Memory Optimization
-- ✅ Texture compression
-- ✅ Mesh optimization (reduce vertex count)
-- ✅ Audio compression and streaming
-- ✅ Asset bundle management
-- ✅ Unload unused assets
-- ✅ **Collection pooling** (see `unity-collection-pool` skill)
+- [CORRECT] Texture compression
+- [CORRECT] Mesh optimization (reduce vertex count)
+- [CORRECT] Audio compression and streaming
+- [CORRECT] Asset bundle management
+- [CORRECT] Unload unused assets
+- [CORRECT] **Collection pooling** (see `unity-collection-pool` skill)
 
 ## Related Skills
 

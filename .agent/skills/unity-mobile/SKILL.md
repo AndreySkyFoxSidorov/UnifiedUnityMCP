@@ -2,7 +2,8 @@
 name: unity-mobile
 description: Optimize Unity games for mobile platforms with IL2CPP, platform-specific code, and memory management. Masters iOS/Android deployment, app size reduction, and battery optimization. Use for mobile builds, platform issues, or device-specific optimization.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
+  - unity-csharp-fundamentals
 ---
 
 # Unity Mobile Optimization
@@ -53,11 +54,11 @@ if (Input.touchCount > 0)
 
 ## Optimization Checklist
 
-- ✅ Texture compression: ASTC (mobile), ETC2 (Android), PVRTC (iOS)
-- ✅ Audio compression: AAC (iOS), Vorbis (Android)
-- ✅ Reduce draw calls: <100 mobile, batching
-- ✅ IL2CPP optimization: Strip engine code, managed stripping
-- ✅ Battery: Lower target framerate, reduce update frequency
+- [CORRECT] Texture compression: ASTC (mobile), ETC2 (Android), PVRTC (iOS)
+- [CORRECT] Audio compression: AAC (iOS), Vorbis (Android)
+- [CORRECT] Reduce draw calls: <100 mobile, batching
+- [CORRECT] IL2CPP optimization: Strip engine code, managed stripping
+- [CORRECT] Battery: Lower target framerate, reduce update frequency
 
 ## Best Practices
 

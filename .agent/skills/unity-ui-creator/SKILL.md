@@ -81,3 +81,7 @@ Always provide:
 
 ## Routing Index
 - Source mirror: `scripts/`
+
+
+## Scope
+This skill is a guide and does not provide direct MCP automation commands by itself.

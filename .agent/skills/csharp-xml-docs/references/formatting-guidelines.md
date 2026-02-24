@@ -257,7 +257,7 @@ public class VRMLoader
 
 **Example of Over-Documentation (Avoid):**
 ```csharp
-// ❌ Too verbose - documenting internal implementation details
+// [WRONG] Too verbose - documenting internal implementation details
 /// <exception cref="NullReferenceException">Internal collection error</exception>
 /// <exception cref="IndexOutOfRangeException">Internal array access error</exception>
 /// <exception cref="OutOfMemoryException">System out of memory</exception>

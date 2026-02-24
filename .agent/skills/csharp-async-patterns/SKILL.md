@@ -2,7 +2,7 @@
 name: csharp-async-patterns
 description: Modern C# asynchronous programming patterns using async/await, proper CancellationToken usage, and error handling in async code. Use when guidance needed on async/await best practices, Task composition and coordination, ConfigureAwait usage, ValueTask optimization, or async operation cancellation patterns. Pure .NET framework patterns applicable to any C# application.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
 ---
 
 # C# Async/Await Patterns
@@ -19,7 +19,7 @@ C# Asynchronous Programming Patterns (POCU Standards Applied)
 - ConfigureAwait usage
 - Asynchronous error handling
 - Task composition and coordination
-- ValueTask 최적화
+- ValueTask optimization
 
 ## Quick Start
 
@@ -35,7 +35,7 @@ public class DataService
         mLogger = logger;
     }
 
-    // ✅ POCU: No Async suffix
+    // [CORRECT] POCU: No Async suffix
     public async Task<Data> LoadData(CancellationToken ct = default)
     {
         try
@@ -64,11 +64,11 @@ public class DataService
 ### Async Method Naming
 
 ```csharp
-// ❌ WRONG: Using Async suffix
+// [WRONG] WRONG: Using Async suffix
 public async Task<Order> GetOrderAsync(int id);
 public async Task SaveOrderAsync(Order order);
 
-// ✅ CORRECT: No Async suffix
+// [CORRECT] CORRECT: No Async suffix
 public async Task<Order> GetOrder(int id);
 public async Task SaveOrder(Order order);
 ```
@@ -76,19 +76,19 @@ public async Task SaveOrder(Order order);
 ### Prohibit async void
 
 ```csharp
-// ❌ WRONG: async void
+// [WRONG] WRONG: async void
 public async void LoadData()
 {
     await mRepository.Fetch();
 }
 
-// ✅ CORRECT: async Task
+// [CORRECT] CORRECT: async Task
 public async Task LoadData()
 {
     await mRepository.Fetch();
 }
 
-// ⚠️ EXCEPTION: Only event handlers allow async void
+// [CAUTION] EXCEPTION: Only event handlers allow async void
 private async void OnButtonClick(object sender, EventArgs e)
 {
     try
@@ -105,11 +105,11 @@ private async void OnButtonClick(object sender, EventArgs e)
 ### Use Explicit Types
 
 ```csharp
-// ❌ WRONG: Using var
+// [WRONG] WRONG: Using var
 var result = await GetOrder(1);
 var tasks = new List<Task>();
 
-// ✅ CORRECT: Explicit type
+// [CORRECT] CORRECT: Explicit type
 Order result = await GetOrder(1);
 List<Task> tasks = new List<Task>();
 ```
@@ -117,10 +117,10 @@ List<Task> tasks = new List<Task>();
 ### Use using Statement
 
 ```csharp
-// ❌ WRONG: using declaration
+// [WRONG] WRONG: using declaration
 using CancellationTokenSource cts = new CancellationTokenSource(timeout);
 
-// ✅ CORRECT: using statement
+// [CORRECT] CORRECT: using statement
 using (CancellationTokenSource cts = new CancellationTokenSource(timeout))
 {
     return await LoadData(cts.Token);

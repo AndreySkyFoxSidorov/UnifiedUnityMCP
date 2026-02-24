@@ -648,7 +648,7 @@ public partial class VRMController : IVTuberAnimationController
 
 ### Anti-Pattern: Implementation Details in Interface
 ```csharp
-// ❌ Bad: Too much implementation detail in interface
+// [WRONG] Bad: Too much implementation detail in interface
 public interface IVTuberAnimationController
 {
     /// <summary>Plays animation asynchronously</summary>

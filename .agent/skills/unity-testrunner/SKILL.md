@@ -2,7 +2,7 @@
 name: unity-testrunner
 description: Unity Test Framework CLI automation and test writing patterns. Masters batchmode execution, NUnit assertions, EditMode/PlayMode testing, and TDD workflows. Use PROACTIVELY for test automation, CI/CD pipelines, or test-driven development in Unity.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
 ---
 
 # Unity TestRunner - Automated Testing for Unity
@@ -18,7 +18,7 @@ Unity Test Framework provides NUnit-based testing with CLI automation for batch 
 - Result parsing and reporting
 - CI/CD pipeline integration
 
-**Foundation Required**: `csharp-plugin:csharp-code-style` (naming conventions, code organization)
+**Foundation Required**: `csharp-code-style` (naming conventions, code organization)
 
 **Optional Integrations**:
 - `unity-vcontainer`: DI-based test mocking

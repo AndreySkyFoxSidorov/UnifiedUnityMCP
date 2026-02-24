@@ -36,10 +36,10 @@ XML documentation generation follows a controlled 3-step process to ensure quali
 ```
 
 **Haiku Advantages**:
-- ✅ Fast turnaround for initial draft
-- ✅ Efficient token usage
-- ✅ Follows established patterns well
-- ✅ Good baseline quality
+- [CORRECT] Fast turnaround for initial draft
+- [CORRECT] Efficient token usage
+- [CORRECT] Follows established patterns well
+- [CORRECT] Good baseline quality
 
 ---
 
@@ -115,9 +115,9 @@ Final Result:
 **When**: After expert review is complete
 
 **Decision Point**:
-- ✅ **Approve**: Accept reviewed documentation and integrate into code
+- [CORRECT] **Approve**: Accept reviewed documentation and integrate into code
 - 🔄 **Revise**: Request additional changes before approval
-- ❌ **Reject**: Return to Step 1 with new requirements
+- [WRONG] **Reject**: Return to Step 1 with new requirements
 
 **Integration**:
 ```csharp
@@ -150,9 +150,9 @@ public partial class VRMController : IVTuberAnimationController
 ```
 
 **Post-Integration**:
-- ✅ Code review (if part of your process)
-- ✅ IntelliSense validation in IDE
-- ✅ Consistency check against similar methods
+- [CORRECT] Code review (if part of your process)
+- [CORRECT] IntelliSense validation in IDE
+- [CORRECT] Consistency check against similar methods
 
 ---
 
@@ -196,11 +196,11 @@ Is XML documentation explicitly requested?
 - Language choice must be consistent with project
 
 ### Post-Review Quality
-- ✅ Patterns fully adhered to
-- ✅ All edge cases documented
-- ✅ Language clear and consistent
-- ✅ No redundancy
-- ✅ Proper use of formatting tags (`<remarks>`, `<para>`, `<br/>`, etc.)
+- [CORRECT] Patterns fully adhered to
+- [CORRECT] All edge cases documented
+- [CORRECT] Language clear and consistent
+- [CORRECT] No redundancy
+- [CORRECT] Proper use of formatting tags (`<remarks>`, `<para>`, `<br/>`, etc.)
 
 ### Approval Criteria
 - Documentation passes both Haiku baseline AND expert review

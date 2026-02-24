@@ -52,7 +52,7 @@ public class Customer
     }
 }
 
-// public init - 객체 초기자에서 설정 가능
+// public init - Can be set in object initializer
 public class OrderDto
 {
     public int ID { get; init; }
@@ -140,15 +140,14 @@ public decimal CalculateDiscount(object customer)
 }
 ```
 
-### Target-Typed new (금지)
+### Target-Typed new (Prohibited)
 
 ```csharp
-// [WRONG] Target-typed new 사용 금지
 List<Order> orders = new();
 Dictionary<string, int> cache = new();
 Customer customer = new("John");
 
-// [CORRECT] 명시적 타입 사용
+// [CORRECT] Use explicit types
 List<Order> orders = new List<Order>();
 Dictionary<string, int> cache = new Dictionary<string, int>();
 Customer customer = new Customer("John");
@@ -156,15 +155,15 @@ Customer customer = new Customer("John");
 
 ## Prohibited Patterns
 
-### var Keyword (금지)
+### var Keyword (Prohibited)
 
 ```csharp
-// [WRONG] var 사용 금지
+// [WRONG] var keyword prohibited
 var order = GetOrder(1);
 var customers = new List<Customer>();
 var result = Calculate();
 
-// [CORRECT] 명시적 타입 선언
+// [CORRECT] Explicit type declaration
 Order order = GetOrder(1);
 List<Customer> customers = new List<Customer>();
 int result = Calculate();
@@ -178,15 +177,15 @@ var query = from c in customers
             select new { c.Name, c.Email };
 ```
 
-### Null Coalescing Operator (금지)
+### Null Coalescing Operator (Prohibited)
 
 ```csharp
-// [WRONG] ?? 연산자 사용 금지
+// [WRONG] ?? operator prohibited
 string name = inputName ?? "Default";
 int count = nullableCount ?? 0;
 Order order = GetOrderOrNull(id) ?? new Order();
 
-// [CORRECT] 명시적 null 검사
+// [CORRECT] Explicit null check
 string name;
 if (inputName != null)
 {
@@ -214,20 +213,20 @@ if (order == null)
 }
 ```
 
-### Using Declaration (금지)
+### Using Declaration (Prohibited)
 
 ```csharp
-// [WRONG] using 선언 (C# 8.0) 사용 금지
+// [WRONG] using declaration (C# 8.0) prohibited
 using FileStream stream = new FileStream(path, FileMode.Open);
 DoSomething(stream);
 
-// [CORRECT] using 문 사용
+// [CORRECT] Use using statement
 using (FileStream stream = new FileStream(path, FileMode.Open))
 {
     DoSomething(stream);
 }
 
-// 여러 리소스
+// Multiple resources
 using (FileStream input = new FileStream(inputPath, FileMode.Open))
 using (FileStream output = new FileStream(outputPath, FileMode.Create))
 {
@@ -235,10 +234,10 @@ using (FileStream output = new FileStream(outputPath, FileMode.Create))
 }
 ```
 
-### Inline Out Declaration (금지)
+### Inline Out Declaration (Prohibited)
 
 ```csharp
-// [WRONG] 인라인 out 선언 금지
+// [WRONG] Inline out declaration prohibited
 if (int.TryParse(input, out int result))
 {
     Process(result);
@@ -249,7 +248,7 @@ if (mCache.TryGetValue(key, out Customer customer))
     return customer;
 }
 
-// [CORRECT] 별도 라인에 선언
+// [CORRECT] Declare on a separate line
 int result;
 if (int.TryParse(input, out result))
 {
@@ -263,15 +262,15 @@ if (mCache.TryGetValue(key, out customer))
 }
 ```
 
-### Async Suffix (금지)
+### Async Suffix (Prohibited)
 
 ```csharp
-// [WRONG] Async 접미사 사용 금지
+// [WRONG] Async suffix prohibited
 public async Task<Order> GetOrderAsync(int id);
 public async Task SaveOrderAsync(Order order);
 public async Task<List<Customer>> FindCustomersAsync(string query);
 
-// [CORRECT] Async 접미사 없음
+// [CORRECT] No Async suffix
 public async Task<Order> GetOrder(int id)
 {
     return await mRepository.Find(id);
@@ -293,7 +292,7 @@ public async Task<List<Customer>> FindCustomers(string query)
 ### File-Scoped Namespaces
 
 ```csharp
-// C# 10.0: 파일 범위 namespace 사용 권장
+// C# 10.0: File-scoped namespace recommended
 namespace MyCompany.Orders.Services;
 
 public class OrderService
@@ -311,7 +310,7 @@ public class OrderService
 ### Readonly Record Struct
 
 ```csharp
-// C# 10.0: readonly record struct로 강타입 사용
+// C# 10.0: Use strong types with readonly record struct
 public readonly record struct UserID(int Value);
 public readonly record struct OrderID(int Value);
 public readonly record struct Money(decimal Amount, string Currency);
@@ -325,14 +324,14 @@ public Order GetOrder(OrderID id)  // OrderID, not just int
 // Cannot accidentally pass wrong ID type
 UserID userId = new UserID(1);
 OrderID orderId = new OrderID(1);
-// GetOrder(userId);  // ❌ Compile error
-GetOrder(orderId);    // ✅ OK
+// GetOrder(userId);  // [WRONG] Compile error
+GetOrder(orderId);    // [CORRECT] OK
 ```
 
 ## Switch Expression
 
 ```csharp
-// Switch expression (C# 8.0+) - 사용 가능
+// Switch expression (C# 8.0+) - Available
 public string GetStatusMessage(EOrderStatus status)
 {
     return status switch
@@ -372,10 +371,10 @@ public string Categorize(Customer customer)
 }
 ```
 
-## Object Initializer (주의)
+## Object Initializer (Caution)
 
 ```csharp
-// [CAUTION] 객체 초기자: 일반적으로 회피
+// [CAUTION] Object initializer: Generally avoid
 // [WRONG] AVOID in most cases
 Order order = new Order
 {
@@ -387,7 +386,7 @@ Order order = new Order
 // [CORRECT] PREFER constructor
 Order order = new Order(1, 100m, EOrderStatus.Pending);
 
-// [CORRECT] EXCEPTION: required/init 사용 시 허용 (C# 11+)
+// [CORRECT] EXCEPTION: Allowed when using required/init (C# 11+)
 public class OrderDto
 {
     public required int CustomerID { get; init; }
@@ -401,7 +400,7 @@ OrderDto dto = new OrderDto
 };
 ```
 
-## Inline Lambda (한 줄만 허용)
+## Inline Lambda (One line only allowed)
 
 ```csharp
 // [CORRECT] Single line lambda

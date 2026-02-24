@@ -18,7 +18,6 @@ public class DataProcessor
 {
     private readonly IDataService mDataService;
 
-    // ✅ POCU: Async 접미사 없음, CancellationToken 지원
     public async Task<Result> Process(CancellationToken ct = default)
     {
         await Task.Delay(1000, ct);
@@ -28,7 +27,7 @@ public class DataProcessor
         return result;
     }
 
-    // ❌ WRONG: No cancellation support
+    // [WRONG] WRONG: No cancellation support
     public async Task<Result> ProcessBad()
     {
         await Task.Delay(1000);
@@ -45,21 +44,21 @@ public class DataLoader
 {
     private readonly ILogger mLogger;
 
-    // ❌ WRONG: Exceptions unhandled
+    // [WRONG] WRONG: Exceptions unhandled
     public async void LoadData()
     {
         await fetch();
         throw new Exception("Lost!"); // Crashes app
     }
 
-    // ✅ CORRECT: Returns Task, Async 접미사 없음
+    // [CORRECT] CORRECT: Returns Task, No Async suffix
     public async Task LoadData()
     {
         await fetch();
         throw new Exception("Catchable");
     }
 
-    // ⚠️ EXCEPTION: Event handlers only
+    // [CAUTION] EXCEPTION: Event handlers only
     private async void OnButtonClick(object sender, EventArgs e)
     {
         try
@@ -86,10 +85,10 @@ public class LibraryService
 {
     private readonly IDataRepository mRepository;
 
-    // Library code: ConfigureAwait(false) 필수
+    // Library code: ConfigureAwait(false) required
     public async Task<string> GetData()
     {
-        // ✅ Don't capture synchronization context
+        // [CORRECT] Don't capture synchronization context
         string data = await mRepository.Fetch().ConfigureAwait(false);
         return processData(data);
     }
@@ -108,7 +107,7 @@ public class UIController
     // UI/Application code: default captures context
     public async Task UpdateUI()
     {
-        // ✅ Default captures context (ConfigureAwait(true))
+        // [CORRECT] Default captures context (ConfigureAwait(true))
         string data = await GetData();
         mTextField.Text = data; // Safe: on UI thread
     }
@@ -125,7 +124,7 @@ public class DashboardService
     private readonly IUserService mUserService;
     private readonly IOrderService mOrderService;
 
-    // ✅ POCU: Run tasks in parallel
+    // [CORRECT] POCU: Run tasks in parallel
     public async Task<(Users, Orders)> LoadMultiple()
     {
         Task<Users> task1 = mUserService.GetUsers();
@@ -145,7 +144,7 @@ public class OrderProcessor
 {
     private readonly IRepository mRepository;
 
-    // ✅ POCU: Sequential execution
+    // [CORRECT] POCU: Sequential execution
     public async Task<Result> Process()
     {
         Data data = await loadData();
@@ -180,7 +179,7 @@ public class CacheService
     private readonly ICacheProvider mCache;
     private readonly INetworkProvider mNetwork;
 
-    // ✅ POCU: Use first completed result
+    // [CORRECT] POCU: Use first completed result
     public async Task<string> LoadFromMultiple()
     {
         Task<string> task1 = mCache.Load();
@@ -200,7 +199,7 @@ public class CachedRepository
     private readonly Dictionary<string, int> mCache;
     private readonly IDataSource mSource;
 
-    // ✅ POCU: Allocation-free for cached results
+    // [CORRECT] POCU: Allocation-free for cached results
     public ValueTask<int> GetCachedValue(string key)
     {
         Debug.Assert(key != null);
@@ -221,7 +220,7 @@ public class CachedRepository
         return value;
     }
 
-    // ❌ WRONG: Task allocates even for cached values
+    // [WRONG] WRONG: Task allocates even for cached values
     public Task<int> GetCachedValueBad(string key)
     {
         int value;
@@ -243,7 +242,7 @@ public class TimeoutService
     private readonly IDataLoader mLoader;
     private readonly ILogger mLogger;
 
-    // ✅ POCU: using 문 사용, 명시적 타입
+    // [CORRECT] POCU: Use using statement, Explicit type
     public async Task<Data> LoadWithTimeout(TimeSpan timeout)
     {
         using (CancellationTokenSource cts = new CancellationTokenSource(timeout))
@@ -269,7 +268,7 @@ public class RetryService
 {
     private readonly ILogger mLogger;
 
-    // ✅ POCU: Exponential backoff retry
+    // [CORRECT] POCU: Exponential backoff retry
     public async Task<T> ExecuteWithRetry<T>(
         Func<Task<T>> operation,
         int maxAttempts = 3,
@@ -310,7 +309,6 @@ public class RetryService
 ## 8. Proper Disposal with Async
 
 ```csharp
-// ✅ POCU: IAsyncDisposable 구현
 public class AsyncResource : IAsyncDisposable
 {
     private HttpClient mClient;
@@ -333,7 +331,7 @@ public class AsyncResource : IAsyncDisposable
     }
 }
 
-// ✅ POCU: using 문 사용
+// [CORRECT] POCU: Use using statement
 public class ResourceConsumer
 {
     public async Task UseResource()
@@ -350,15 +348,15 @@ public class ResourceConsumer
 
 Before completing async implementation:
 
-- [ ] 모든 async 메서드는 Task, Task<T>, ValueTask, ValueTask<T> 반환 (async void 금지)
-- [ ] Async 접미사 없음 (POCU 표준)
-- [ ] 장기 실행 작업에 CancellationToken 매개변수 추가
-- [ ] 내부 async 호출에 CancellationToken 전달
-- [ ] .Result, .Wait(), .GetAwaiter().GetResult() 금지 (교착 위험)
-- [ ] 라이브러리 코드에서 ConfigureAwait(false) 사용
-- [ ] 취소와 함께 async 작업 테스트
-- [ ] 적절한 경우 hot path에 ValueTask 사용
-- [ ] 네트워크 작업에 타임아웃 처리 구현
-- [ ] 일시적 실패에 재시도 로직 추가
-- [ ] var 대신 명시적 타입 사용
-- [ ] using 선언 대신 using 문 사용
+- [ ]  async  Task, Task<T>, ValueTask, ValueTask<T>  (async void Prohibited)
+- [ ] No Async suffix (POCU )
+- [ ]    CancellationToken  
+- [ ]  async  CancellationToken 
+- [ ] .Result, .Wait(), .GetAwaiter().GetResult() Prohibited ( )
+- [ ]   ConfigureAwait(false) 
+- [ ]   async  
+- [ ]   hot path ValueTask 
+- [ ]     
+- [ ]     
+- [ ] var  Use explicit types
+- [ ] using   Use using statement

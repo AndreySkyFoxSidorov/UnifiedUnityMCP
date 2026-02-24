@@ -2,8 +2,7 @@
 name: unity-csharp-fundamentals
 description: Unity C# fundamental patterns including TryGetComponent, SerializeField, RequireComponent, and safe coding practices. Essential patterns for robust Unity development. Use PROACTIVELY for any Unity C# code to ensure best practices.
 requires:
-  - csharp-plugin:csharp-code-style
-  - csharp-plugin:csharp-xml-docs
+  - csharp-code-style
 ---
 
 # Unity C# Fundamentals - Essential Coding Patterns
@@ -23,18 +22,18 @@ Core Unity C# patterns for safe, maintainable code. Not optimizations but **fund
 **Always use `TryGetComponent` instead of `GetComponent`**:
 
 ```csharp
-// ❌ WRONG
+// [WRONG] WRONG
 Rigidbody rb = GetComponent<Rigidbody>();
 rb.velocity = Vector3.zero;  // NullReferenceException!
 
-// ✅ CORRECT
+// [CORRECT] CORRECT
 Rigidbody rb;
 if (TryGetComponent(out rb))
 {
     rb.velocity = Vector3.zero;
 }
 
-// ✅ Cache in Awake with validation
+// [CORRECT] Cache in Awake with validation
 private Rigidbody mRb;
 
 void Awake()
@@ -49,29 +48,29 @@ void Awake()
 ### Global Object Search (Unity 2023.1+)
 
 ```csharp
-// ❌ OBSOLETE - DON'T USE
+// [WRONG] OBSOLETE - DON'T USE
 GameManager manager = FindObjectOfType<GameManager>();
 
-// ✅ CORRECT - Fastest (unordered)
+// [CORRECT] CORRECT - Fastest (unordered)
 GameManager manager = FindAnyObjectByType<GameManager>();
 
-// ✅ CORRECT - Ordered
+// [CORRECT] CORRECT - Ordered
 GameManager manager = FindFirstObjectByType<GameManager>();
 
-// ✅ Multiple objects
+// [CORRECT] Multiple objects
 Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
 ```
 
 ### SerializeField Pattern
 
 ```csharp
-// ❌ WRONG: Public field
+// [WRONG] WRONG: Public field
 public float speed;
 
-// ✅ CORRECT: SerializeField + private
+// [CORRECT] CORRECT: SerializeField + private
 [SerializeField] private float mSpeed = 5f;
 
-// ✅ With Inspector helpers
+// [CORRECT] With Inspector helpers
 [SerializeField, Tooltip("Units/second"), Range(0f, 100f)]
 private float mMoveSpeed = 5f;
 
@@ -97,11 +96,11 @@ public class PhysicsObject : MonoBehaviour
 ### Unity Null Safety
 
 ```csharp
-// ❌ WRONG: C# null operators don't work with Unity Objects
+// [WRONG] WRONG: C# null operators don't work with Unity Objects
 Transform target = mCached ?? FindTarget();  // Broken!
 mEnemy?.TakeDamage(10);  // May fail after Destroy
 
-// ✅ CORRECT: Explicit null check
+// [CORRECT] CORRECT: Explicit null check
 Transform target = mCached != null ? mCached : FindTarget();
 
 if (mEnemy != null)
@@ -126,13 +125,13 @@ void OnDestroy() { /* 5. Final cleanup */ }
 > `init` accessor causes compile error CS0518.
 
 ```csharp
-// ❌ COMPILE ERROR in Unity
+// [WRONG] COMPILE ERROR in Unity
 public string Name { get; private init; }
 
-// ✅ Use private set
+// [CORRECT] Use private set
 public string Name { get; private set; }
 
-// ✅ Or readonly field + property
+// [CORRECT] Or readonly field + property
 private readonly string mName;
 public string Name => mName;
 ```

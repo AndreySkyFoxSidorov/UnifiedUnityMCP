@@ -2,7 +2,8 @@
 name: unity-collection-pool
 description: Unity Collection Pool expert for GC-free collection management using ListPool, DictionaryPool, HashSetPool, and ObjectPool. Masters memory optimization, pool sizing, and allocation-free patterns. Use PROACTIVELY for collection allocations, GC pressure reduction, temporary list/dictionary usage, or performance-critical code paths.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
+  - unity-csharp-fundamentals
 ---
 
 # Unity Collection Pool - GC-Free Collection Management
@@ -259,3 +260,7 @@ Advanced usage patterns:
 - **unity-performance**: Collection pooling is key optimization technique
 - **unity-async**: Careful pool usage across async boundaries
 - **unity-unitask**: Combine with UniTask for async pooling patterns
+
+
+## Version Gate
+`UnityEngine.Pool` requires Unity 2021.1+.

@@ -17,7 +17,7 @@ public class DataFetcher
 {
     private readonly ILogger mLogger;
 
-    // ✅ POCU: Async 접미사 없음, using 문 사용
+    // [CORRECT] POCU: No Async suffix, Use using statement
     public async Task<string> FetchData()
     {
         using (HttpClient client = new HttpClient())
@@ -36,7 +36,6 @@ public class CancellableDataFetcher
 {
     private readonly ILogger mLogger;
 
-    // ✅ POCU: CancellationToken 지원
     public async Task<string> FetchData(CancellationToken ct)
     {
         using (HttpClient client = new HttpClient())
@@ -61,7 +60,7 @@ public class DashboardService
     private readonly IOrderRepository mOrderRepository;
     private readonly IStatsRepository mStatsRepository;
 
-    // ✅ POCU: 명시적 타입 사용
+    // [CORRECT] POCU: Use explicit types
     public async Task<Summary> GetDashboardData()
     {
         Task<List<User>> usersTask = mUserRepository.GetAll();
@@ -88,7 +87,7 @@ public class BatchProcessor
     private readonly IItemProcessor mProcessor;
     private readonly ILogger mLogger;
 
-    // ✅ POCU: using 문 사용, 명시적 타입
+    // [CORRECT] POCU: Use using statement, Explicit type
     public async Task ProcessItems(List<Item> items, int maxConcurrency = 5)
     {
         Debug.Assert(items != null);
@@ -136,7 +135,6 @@ public class ResilientDataLoader
 
     private const int MAX_ATTEMPTS = 3;
 
-    // ✅ POCU: 명시적 타입, 상수 ALL_CAPS
     public async Task<Data> LoadDataWithRetry(CancellationToken ct)
     {
         int attempts = 0;
@@ -175,7 +173,7 @@ public class ParallelProcessor
 {
     private readonly IItemProcessor mProcessor;
 
-    // ✅ POCU: 명시적 타입
+    // [CORRECT] POCU: Explicit type
     public async Task ProcessAll(List<Item> items)
     {
         Debug.Assert(items != null);
@@ -222,7 +220,7 @@ public class TimeoutLoader
     private readonly IDataLoader mLoader;
     private readonly ILogger mLogger;
 
-    // ✅ POCU: using 문 사용
+    // [CORRECT] POCU: Use using statement
     public async Task<Data> LoadWithTimeout(TimeSpan timeout)
     {
         using (CancellationTokenSource cts = new CancellationTokenSource(timeout))
@@ -248,7 +246,7 @@ public class WhenAnyTimeoutLoader
 {
     private readonly IDataLoader mLoader;
 
-    // ✅ POCU: 명시적 타입
+    // [CORRECT] POCU: Explicit type
     public async Task<Data> LoadWithTimeout(TimeSpan timeout)
     {
         Task<Data> dataTask = mLoader.Load();
@@ -277,7 +275,6 @@ public class ProgressiveProcessor
     private readonly IItemLoader mLoader;
     private readonly IItemProcessor mProcessor;
 
-    // ✅ POCU: IProgress<T> 패턴
     public async Task<Summary> ProcessWithProgress(
         IProgress<int> progressOrNull,
         CancellationToken ct)
@@ -335,7 +332,7 @@ public class ProgressConsumer
 ### Lazy Async Initialization
 
 ```csharp
-// ✅ POCU: mPascalCase for private fields
+// [CORRECT] POCU: mPascalCase for private fields
 public class AsyncLazy<T>
 {
     private readonly Lazy<Task<T>> mInstance;
@@ -378,7 +375,7 @@ public class ConfigService
 ### Async Semaphore
 
 ```csharp
-// ✅ POCU: mPascalCase, camelCase for private methods
+// [CORRECT] POCU: mPascalCase, camelCase for private methods
 public class AsyncResource
 {
     private readonly SemaphoreSlim mSemaphore;
@@ -409,7 +406,7 @@ public class AsyncResource
 ### Async Event
 
 ```csharp
-// ✅ POCU: mPascalCase for private fields
+// [CORRECT] POCU: mPascalCase for private fields
 public class AsyncEventHandler
 {
     private readonly List<Func<Task>> mHandlers;

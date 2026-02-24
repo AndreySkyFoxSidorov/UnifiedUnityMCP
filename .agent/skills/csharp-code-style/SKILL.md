@@ -341,10 +341,10 @@ Error handling patterns:
 
 ## Key Principles
 
-1. **가독성 최우선**: 명확하고 이해하기 쉬운 코드 작성
-2. **명시적 타입**: `var` 사용 금지, 타입 명시
-3. **Null 안전**: OrNull 접미어로 nullable 명시
-4. **Assertion**: 모든 가정에 Debug.Assert 사용
-5. **경계 검증**: 외부 데이터는 경계에서만 검증
-6. **Use init**: Prefer C# 9.0 private init (.NET 5+ only, NOT available in Unity)
+1. **Readability first**: Write clear and easy-to-understand code
+2. **Explicit types**: Do not use `var`; declare explicit types
+3. **Null safety**: Use `OrNull` suffix for nullable values
+4. **Assertions**: Use `Debug.Assert` for assumptions
+5. **Boundary validation**: Validate external data only at boundaries
+6. **Use init with version gate**: Prefer C# 9.0 private init (.NET 5+ only, NOT available in Unity)
 7. **No Emoji**: Prohibit using emojis in code examples and documentation, use text tags ([WRONG], [CORRECT], [CAUTION])

@@ -2,7 +2,7 @@
 name: unity-textmeshpro
 description: TextMeshPro (TMPro) expert for Unity text rendering with advanced typography, performance optimization, and professional text effects. Masters font asset creation, dynamic fonts, rich text formatting, material presets, and text mesh optimization. Use PROACTIVELY for text rendering, font management, localization text, UI text performance, or text effects implementation.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
 ---
 
 # Unity TextMeshPro - Professional Text Rendering

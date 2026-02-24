@@ -64,3 +64,7 @@ When instructed to create a new UI element:
 2. Group logical sections into empty `RectTransform` parents (CanvasGroup optional).
 3. Populate children with standard Unity UI Elements, ensuring to add `LocalizeUIText` on all text nodes.
 4. Scale using `AspectRatioFitter` and standard UI layout groups.
+
+
+## Discovery Step
+Before applying optional project-specific components (localization, animation, helpers), verify the component exists in the project. If absent, skip that step.

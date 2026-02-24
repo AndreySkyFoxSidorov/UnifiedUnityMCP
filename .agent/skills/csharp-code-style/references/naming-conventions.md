@@ -9,7 +9,7 @@
 | Class | PascalCase | `PlayerManager`, `OrderService` |
 | Struct | SPascalCase | `SUserID`, `SPlayerData`, `SVector3` |
 | Record | PascalCase | `OrderDto`, `CustomerRecord` |
-| readonly record struct | PascalCase (S 불필요) | `UserID`, `Point` |
+| readonly record struct | PascalCase (S not required) | `UserID`, `Point` |
 | Interface | IPascalCase | `IDisposable`, `IOrderRepository` |
 | Enum | EPascalCase | `EDirection`, `EOrderStatus` |
 | Bit Flags Enum | EPascalCaseFlags | `EVisibilityFlags`, `EPermissionFlags` |
@@ -19,8 +19,8 @@
 
 | Member | Convention | Examples |
 |--------|------------|----------|
-| Public Method | PascalCase (동사+명사) | `GetCustomer`, `ProcessOrder` |
-| Private Method | camelCase (동사+명사) | `getCustomer`, `processOrder` |
+| Public Method | PascalCase (Verb+Noun) | `GetCustomer`, `ProcessOrder` |
+| Private Method | camelCase (Verb+Noun) | `getCustomer`, `processOrder` |
 | Property | PascalCase | `FirstName`, `OrderID`, `IsEnabled` |
 | Private Field | mPascalCase | `mOrderRepository`, `mRetryCount` |
 | Private Bool Field | mbPascalCase | `mbIsEnabled`, `mbHasChildren` |
@@ -224,7 +224,7 @@ public struct SPlayerData
 ### Readonly Record Struct: No S Prefix
 
 ```csharp
-// readonly record struct: S prefix 불필요 (C# 10.0)
+// readonly record struct: S prefix not required (C# 10.0)
 public readonly record struct UserID(int Value);
 public readonly record struct Point(int X, int Y);
 public readonly record struct Money(decimal Amount, string Currency);

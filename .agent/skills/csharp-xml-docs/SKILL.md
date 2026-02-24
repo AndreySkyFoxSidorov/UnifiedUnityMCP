@@ -2,7 +2,7 @@
 name: csharp-xml-docs
 description: C# XML documentation with on-demand Haiku→Expert Review→Final workflow. Use when documenting C# APIs, properties, methods, classes, and interfaces natively in English.
 requires:
-  - csharp-plugin:csharp-code-style
+  - csharp-code-style
 ---
 
 # C# XML Documentation Workflow

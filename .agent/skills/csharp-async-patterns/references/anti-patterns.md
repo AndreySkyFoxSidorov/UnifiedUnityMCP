@@ -14,7 +14,7 @@
 
 ## 1. Blocking on Async Code
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 public class BadService
@@ -31,14 +31,14 @@ public class BadService
 
 **Why it's bad**: Can cause deadlocks, especially in UI applications with synchronization context.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class GoodService
 {
     private readonly ILogger mLogger;
 
-    // ✅ POCU: Async 접미사 없음
+    // [CORRECT] POCU: No Async suffix
     public async Task DoWorkProperly()
     {
         Result result = await doWork();
@@ -66,7 +66,7 @@ public class GoodService
 
 ## 2. Async Void (Outside Event Handlers)
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 // BAD: Exceptions are lost!
@@ -79,21 +79,21 @@ public async void LoadData()
 
 **Why it's bad**: Exceptions cannot be caught by caller, leading to application crashes.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class DataLoader
 {
     private readonly ILogger mLogger;
 
-    // ✅ POCU: Returns Task, Async 접미사 없음
+    // [CORRECT] POCU: Returns Task, No Async suffix
     public async Task LoadData()
     {
         await Task.Delay(1000);
         throw new Exception("Can be caught by caller");
     }
 
-    // ⚠️ EXCEPTION: Event handlers MUST be async void
+    // [CAUTION] EXCEPTION: Event handlers MUST be async void
     private async void OnButtonClick(object sender, EventArgs e)
     {
         try
@@ -110,7 +110,7 @@ public class DataLoader
 
 ## 3. Fire-and-Forget Without Error Handling
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 public class BadFireAndForget
@@ -124,7 +124,7 @@ public class BadFireAndForget
 
 **Why it's bad**: Exceptions are silently swallowed, making debugging impossible.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class GoodFireAndForget
@@ -136,7 +136,7 @@ public class GoodFireAndForget
         _ = safeFireAndForget();
     }
 
-    // ✅ POCU: camelCase for private methods
+    // [CORRECT] POCU: camelCase for private methods
     private async Task safeFireAndForget()
     {
         try
@@ -160,7 +160,7 @@ public class GoodFireAndForget
 
 ## 4. Missing Cancellation Support
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 // BAD: No way to cancel
@@ -175,14 +175,14 @@ public async Task LongProcess()
 
 **Why it's bad**: User cannot stop long-running operations, wastes resources.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class CancellableProcessor
 {
     private readonly IItemProcessor mProcessor;
 
-    // ✅ POCU: Cancellable
+    // [CORRECT] POCU: Cancellable
     public async Task LongProcess(CancellationToken ct)
     {
         for (int i = 0; i < 1000; i++)
@@ -196,7 +196,7 @@ public class CancellableProcessor
 
 ## 5. Over-Using Async
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 // BAD: Unnecessary async overhead
@@ -213,12 +213,12 @@ public async Task<string> GetName()
 
 **Why it's bad**: Async machinery adds overhead for synchronous operations.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class ValueProvider
 {
-    // ✅ POCU: Return Task directly or use sync method
+    // [CORRECT] POCU: Return Task directly or use sync method
     public Task<int> GetValue()
     {
         return Task.FromResult(42);
@@ -239,7 +239,7 @@ public class ValueProvider
 
 ## 6. Not Passing CancellationToken Through
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 public async Task Process(CancellationToken ct)
@@ -253,12 +253,12 @@ public async Task Process(CancellationToken ct)
 
 **Why it's bad**: Cancellation doesn't propagate, operations continue unnecessarily.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class ProcessorWithCancellation
 {
-    // ✅ POCU: Pass ct through all async calls
+    // [CORRECT] POCU: Pass ct through all async calls
     public async Task Process(CancellationToken ct)
     {
         await step1(ct);
@@ -288,7 +288,7 @@ public class ProcessorWithCancellation
 
 ## 7. Capturing Modified Variables in Async Loops
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 // BAD: Variable capture issue
@@ -305,7 +305,7 @@ for (int i = 0; i < 10; i++)
 
 **Why it's bad**: Loop variable is captured by reference, all tasks see final value.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class LoopCaptureFixed
@@ -314,7 +314,6 @@ public class LoopCaptureFixed
 
     public async Task ExecuteLoop()
     {
-        // ✅ POCU: 명시적 타입, 변수 캡처 수정
         List<Task> tasks = new List<Task>();
 
         for (int i = 0; i < 10; i++)
@@ -335,7 +334,7 @@ public class LoopCaptureFixed
 
 ## 8. Async in Constructors
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 // BAD: Cannot await in constructor
@@ -351,10 +350,10 @@ public class BadService
 
 **Why it's bad**: Constructors cannot be async, blocking causes deadlocks.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
-// ✅ POCU: Factory pattern
+// [CORRECT] POCU: Factory pattern
 public class GoodService
 {
     private readonly Config mConfig;
@@ -405,7 +404,7 @@ public class LazyService
 
 ## 9. Ignoring Task Results
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 public async Task Process()
@@ -417,7 +416,7 @@ public async Task Process()
 
 **Why it's bad**: Background task exceptions are lost, no way to track completion.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class TaskTracker
@@ -426,7 +425,7 @@ public class TaskTracker
 
     public async Task Process()
     {
-        // ✅ POCU: 명시적 타입
+        // [CORRECT] POCU: Explicit type
         Task backgroundTask = Task.Run(() => backgroundWork());
 
         await otherWork();
@@ -472,7 +471,7 @@ public class TaskTracker
 
 ## 10. Mixing Sync and Async Code Poorly
 
-### ❌ The Problem
+### [WRONG] The Problem
 
 ```csharp
 // BAD: Mixed sync/async
@@ -485,14 +484,14 @@ public void ProcessData()
 
 **Why it's bad**: Loses benefits of async, introduces deadlock risks.
 
-### ✅ The Solution (POCU)
+### [CORRECT] The Solution (POCU)
 
 ```csharp
 public class ConsistentProcessor
 {
     private readonly IRepository mRepository;
 
-    // ✅ POCU: Async all the way
+    // [CORRECT] POCU: Async all the way
     public async Task ProcessData()
     {
         Data data = await mRepository.Load();
@@ -512,16 +511,16 @@ public class ConsistentProcessor
 
 Avoid these anti-patterns:
 
-- [ ] .Result, .Wait() 차단 금지
-- [ ] async void 금지 (이벤트 핸들러 제외)
-- [ ] Fire-and-forget에 에러 처리 필수
-- [ ] 모든 장기 작업에 CancellationToken 필수
-- [ ] 호출 체인 전체에 CancellationToken 전달
-- [ ] async는 진정한 I/O-bound 작업에만 사용
-- [ ] 루프 변수 캡처 올바르게 처리
-- [ ] 생성자에서 async 금지
-- [ ] Task 결과 무시 금지
-- [ ] 호출 체인 전체에서 sync 또는 async 일관성 유지
-- [ ] Async 접미사 금지 (POCU 표준)
-- [ ] var 대신 명시적 타입 사용
-- [ ] using 선언 대신 using 문 사용
+- [ ] .Result, .Wait()  Prohibited
+- [ ] async void Prohibited (  )
+- [ ] Fire-and-forget   
+- [ ]    CancellationToken 
+- [ ]    CancellationToken 
+- [ ] async  I/O-bound  
+- [ ]     
+- [ ]  async Prohibited
+- [ ] Task   Prohibited
+- [ ]    sync  async  
+- [ ] Async  Prohibited (POCU )
+- [ ] var  Use explicit types
+- [ ] using   Use using statement

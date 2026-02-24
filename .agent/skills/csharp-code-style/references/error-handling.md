@@ -1,15 +1,14 @@
 # C# Error Handling Reference (POCU)
 
-## Debug.Assert 사용
+## Debug.Assert 
 
-### 모든 가정에 Assert 추가
+###   Assert 
 
 ```csharp
 public class OrderService
 {
     public void ProcessOrder(Order order)
     {
-        // 모든 가정에 Debug.Assert 추가
         Debug.Assert(order != null, "Order cannot be null");
         Debug.Assert(order.Items.Count > 0, "Order must have items");
         Debug.Assert(order.CustomerID > 0, "Invalid customer ID");
@@ -45,7 +44,6 @@ public string GetStatusMessage(EOrderStatus status)
         case EOrderStatus.Cancelled:
             return "Order cancelled";
         default:
-            // 도달 불가능한 default: Debug.Fail 사용
             Debug.Fail($"Unknown order status: {status}");
             return "Unknown";
     }
@@ -65,20 +63,17 @@ public string GetMessage(ELogLevel level)
 }
 ```
 
-## 경계에서만 예외 처리
+##   
 
-### 경계 함수 (Public API)
+###   (Public API)
 
 ```csharp
-// 경계 함수: 외부 데이터 검증 및 예외 처리
 public class OrderController
 {
     private readonly OrderService mOrderService;
 
-    // 경계: 외부 입력 검증
     public ActionResult CreateOrder(OrderRequest request)
     {
-        // 경계에서 모든 검증 수행
         if (request == null)
         {
             return BadRequest("Request is required");
@@ -102,23 +97,19 @@ public class OrderController
             }
         }
 
-        // 검증 통과 후 내부 함수 호출 (예외 없음)
         Order order = mOrderService.CreateOrder(request);
         return Ok(order);
     }
 }
 ```
 
-### 내부 함수 (예외 금지)
+###   ( Prohibited)
 
 ```csharp
-// 내부 함수: 예외를 던지지 않음
 public class OrderService
 {
-    // 내부 함수: 경계에서 이미 검증됨
     public Order CreateOrder(OrderRequest request)
     {
-        // Assert로 가정 확인 (Debug 빌드에서만)
         Debug.Assert(request != null);
         Debug.Assert(!string.IsNullOrEmpty(request.CustomerName));
         Debug.Assert(request.Items != null && request.Items.Count > 0);
@@ -134,7 +125,6 @@ public class OrderService
         return order;
     }
 
-    // 내부 helper: 예외 없음
     private decimal calculateTotal(List<OrderItem> items)
     {
         Debug.Assert(items != null);
@@ -149,23 +139,20 @@ public class OrderService
 }
 ```
 
-## Null 처리 규칙
+## Null  
 
-### Public 함수: null 매개변수 미허용
+### Public : null  
 
 ```csharp
 public class CustomerService
 {
-    // Public: null 허용하지 않음 (경계에서 검증)
     public void UpdateCustomer(Customer customer)
     {
         Debug.Assert(customer != null, "Customer cannot be null");
-        // 경계에서 이미 검증되었으므로 null 체크 불필요
 
         mRepository.Update(customer);
     }
 
-    // null 허용 시: OrNull suffix 필수
     public void UpdateCustomerOrNull(Customer customerOrNull)
     {
         if (customerOrNull == null)
@@ -178,18 +165,16 @@ public class CustomerService
 }
 ```
 
-### Public 함수: null 반환 회피
+### Public : null  
 
 ```csharp
 public class OrderRepository
 {
-    // [WRONG] AVOID: null 반환
     public Order GetOrder(int id)
     {
-        return mOrders.FirstOrDefault(o => o.ID == id);  // null 가능
+        return mOrders.FirstOrDefault(o => o.ID == id);  
     }
 
-    // [CORRECT] OPTION 1: OrNull suffix로 명시
     public Order GetOrderOrNull(int id)
     {
         Order order;
@@ -200,7 +185,6 @@ public class OrderRepository
         return null;
     }
 
-    // [CORRECT] OPTION 2: 존재 확인 후 예외 (경계 함수에서)
     public Order GetOrder(int id)
     {
         Order order = GetOrderOrNull(id);
@@ -208,7 +192,6 @@ public class OrderRepository
         return order;
     }
 
-    // [CORRECT] OPTION 3: bool 반환 패턴
     public bool TryGetOrder(int id, out Order order)
     {
         return mOrders.TryGetValue(id, out order);
@@ -216,16 +199,15 @@ public class OrderRepository
 }
 ```
 
-## 유효성 검증 패턴
+##   
 
-### 경계에서 검증 (Controller/Handler)
+###   (Controller/Handler)
 
 ```csharp
 public class ProductController
 {
     public ActionResult UpdatePrice(int productId, UpdatePriceRequest request)
     {
-        // 경계에서 모든 검증
         if (productId <= 0)
         {
             return BadRequest("Invalid product ID");
@@ -246,7 +228,6 @@ public class ProductController
             return BadRequest("Price exceeds maximum allowed");
         }
 
-        // 검증 통과 - 내부 서비스 호출
         bool bSuccess = mProductService.UpdatePrice(productId, request.NewPrice);
 
         if (!bSuccess)
@@ -259,12 +240,11 @@ public class ProductController
 }
 ```
 
-### 내부 서비스 (Assert Only)
+###   (Assert Only)
 
 ```csharp
 public class ProductService
 {
-    // 내부: 검증 대신 Assert
     public bool UpdatePrice(int productId, decimal newPrice)
     {
         Debug.Assert(productId > 0);
@@ -284,25 +264,22 @@ public class ProductService
 }
 ```
 
-## async void 금지
+## async void Prohibited
 
 ```csharp
 public class EventProcessor
 {
-    // [WRONG] async void 사용 금지
     public async void ProcessEvent(Event evt)
     {
         await handleEvent(evt);
     }
 
-    // [CORRECT] async Task 사용
     public async Task ProcessEvent(Event evt)
     {
         Debug.Assert(evt != null);
         await handleEvent(evt);
     }
 
-    // [CAUTION] EXCEPTION: 이벤트 핸들러만 async void 허용
     private async void OnButtonClick(object sender, EventArgs e)
     {
         try
@@ -317,7 +294,7 @@ public class EventProcessor
 }
 ```
 
-## 에러 로깅 패턴
+##   
 
 ```csharp
 public class OrderProcessor
@@ -358,12 +335,11 @@ public class OrderProcessor
 }
 ```
 
-## Try 패턴
+## Try 
 
 ```csharp
 public class Parser
 {
-    // Try 패턴: out 매개변수 별도 선언
     public bool TryParse(string input, out Order order)
     {
         order = null;
@@ -384,7 +360,6 @@ public class Parser
         }
     }
 
-    // 사용
     public void ProcessInput(string input)
     {
         Order order;
@@ -400,9 +375,9 @@ public class Parser
 }
 ```
 
-## 프로젝트 설정
+##  
 
-### Release 빌드 경고 → 오류
+### Release   → 
 
 ```xml
 <!-- .csproj -->
@@ -411,7 +386,7 @@ public class Parser
 </PropertyGroup>
 ```
 
-### Nullable Context 설정
+### Nullable Context 
 
 ```xml
 <!-- .csproj -->
@@ -420,7 +395,7 @@ public class Parser
 </PropertyGroup>
 ```
 
-### Implicit Global Using 금지
+### Implicit Global Using Prohibited
 
 ```xml
 <!-- .csproj -->
@@ -433,11 +408,11 @@ public class Parser
 
 | Rule | Description |
 |------|-------------|
-| Debug.Assert | 모든 가정에 사용 |
-| Debug.Fail | 도달 불가능한 코드에 사용 |
-| 경계 검증 | Public API에서만 예외 처리 |
-| 내부 함수 | 예외 던지지 않음, Assert만 사용 |
-| null 매개변수 | Public에서 미허용 (OrNull suffix로 예외) |
-| null 반환 | 회피 (OrNull suffix 또는 Try 패턴) |
-| async void | 금지 (이벤트 핸들러 제외) |
-| TreatWarningsAsErrors | Release 빌드에서 활성화 |
+| Debug.Assert |    |
+| Debug.Fail |     |
+|   | Public API   |
+|   |   , Assert  |
+| null  | Public  (OrNull suffix ) |
+| null  |  (OrNull suffix  Try ) |
+| async void | Prohibited (  ) |
+| TreatWarningsAsErrors | Release   |

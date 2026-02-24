@@ -1,6 +1,6 @@
 # Unified Unity MCP Tools Reference
 
-This document lists all 19 tools available in the Unified Unity MCP Server, detailing their exact input schemas, return values, and expected behavior.
+This document lists all 20 tools available in the Unified Unity MCP Server, detailing their exact input schemas, return values, and expected behavior.
 
 ## Core Unity Info
 
@@ -158,3 +158,8 @@ This document lists all 19 tools available in the Unified Unity MCP Server, deta
   - `defines` (optional, string): For set_defines, semi-colon separated (e.g., `"DEBUG;PROFILING"`).
   - `buildTarget` (optional, string): For build action, e.g., `"Android"`, `"StandaloneWindows64"`.
 - **Returns**: Result of operation or Build Report summary.
+
+
+## Naming note
+
+Some tool IDs use dot naming (for example `unity.gameobject.create`, `unity.selection.set`), and some use underscore naming (for example `unity_component_property`, `unity_scene_manage`). These are canonical server IDs and should be used exactly as listed.

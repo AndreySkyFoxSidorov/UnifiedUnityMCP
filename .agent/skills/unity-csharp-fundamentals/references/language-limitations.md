@@ -11,7 +11,7 @@ Unity supports C# 9.0 language features but runs on Mono/IL2CPP runtime, which l
 The `init` accessor requires `System.Runtime.CompilerServices.IsExternalInit` type, which is only available in .NET 5+ runtime. Unity's Mono/IL2CPP runtime does not include this type.
 
 ```csharp
-// ❌ COMPILE ERROR CS0518 in Unity
+// [WRONG] COMPILE ERROR CS0518 in Unity
 public class Player
 {
     public string Name { get; private init; }  // Error: IsExternalInit not defined
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
 // External code
 Player player = GetComponent<Player>();
 player.Initialize("Hero");
-// player.Name = "Villain";  // ❌ Compile error - private set
+// player.Name = "Villain";  // [WRONG] Compile error - private set
 ```
 
 #### Option 2: Readonly Field + Property (True Immutability)
@@ -72,7 +72,7 @@ public class PlayerData
 
 // Usage
 PlayerData data = new PlayerData("Hero", 100);
-// data.Name = "Villain";  // ❌ Compile error - no setter
+// data.Name = "Villain";  // [WRONG] Compile error - no setter
 ```
 
 #### Option 3: Constructor-Only Pattern for MonoBehaviour
@@ -102,10 +102,10 @@ public class Enemy : MonoBehaviour
 Records are partially supported in Unity, but without `init` properties:
 
 ```csharp
-// ❌ DOES NOT WORK - positional records use init internally
+// [WRONG] DOES NOT WORK - positional records use init internally
 public record PlayerDto(string Name, int Health);
 
-// ✅ WORKS - explicit properties with private set
+// [CORRECT] WORKS - explicit properties with private set
 public record PlayerDto
 {
     public string Name { get; private set; }
@@ -118,7 +118,7 @@ public record PlayerDto
     }
 }
 
-// ✅ ALTERNATIVE - use class with value equality
+// [CORRECT] ALTERNATIVE - use class with value equality
 public class PlayerDto : IEquatable<PlayerDto>
 {
     public string Name { get; }
@@ -146,13 +146,13 @@ public class PlayerDto : IEquatable<PlayerDto>
 The C# 11 `required` modifier is also not available in Unity:
 
 ```csharp
-// ❌ NOT AVAILABLE in Unity
+// [WRONG] NOT AVAILABLE in Unity
 public class Config
 {
     public required string ApiKey { get; init; }
 }
 
-// ✅ Unity Alternative - validate in constructor
+// [CORRECT] Unity Alternative - validate in constructor
 public class Config
 {
     public string ApiKey { get; }
@@ -171,14 +171,14 @@ The following C# 9.0 features ARE available in Unity:
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Pattern matching enhancements | ✅ Available | `and`, `or`, `not`, relational patterns |
-| Switch expressions | ✅ Available | Including property patterns |
-| Target-typed new (`new()`) | ✅ Available | **Prohibited by POCU standards** |
-| Covariant return types | ✅ Available | Override with more derived type |
-| Static anonymous functions | ✅ Available | `static () => ...` |
-| Top-level statements | ✅ Available | **Not recommended for Unity** |
-| Native-sized integers | ✅ Available | `nint`, `nuint` |
-| Function pointers | ✅ Available | Unsafe context only |
+| Pattern matching enhancements | [CORRECT] Available | `and`, `or`, `not`, relational patterns |
+| Switch expressions | [CORRECT] Available | Including property patterns |
+| Target-typed new (`new()`) | [CORRECT] Available | **Prohibited by POCU standards** |
+| Covariant return types | [CORRECT] Available | Override with more derived type |
+| Static anonymous functions | [CORRECT] Available | `static () => ...` |
+| Top-level statements | [CORRECT] Available | **Not recommended for Unity** |
+| Native-sized integers | [CORRECT] Available | `nint`, `nuint` |
+| Function pointers | [CORRECT] Available | Unsafe context only |
 
 ### Pattern Matching Examples (Unity Compatible)
 
@@ -220,7 +220,7 @@ public float GetSpeedModifier(CharacterState state)
 While possible to add the `IsExternalInit` type manually, this is **NOT RECOMMENDED**:
 
 ```csharp
-// ⚠️ NOT RECOMMENDED - May cause issues with IL2CPP and future Unity versions
+// [CAUTION] NOT RECOMMENDED - May cause issues with IL2CPP and future Unity versions
 namespace System.Runtime.CompilerServices
 {
     internal static class IsExternalInit { }
