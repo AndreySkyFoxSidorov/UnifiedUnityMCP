@@ -53,6 +53,12 @@ namespace Mcp.Editor
             ToolRegistry.Register(new TestRunTool());
             ToolRegistry.Register(new BuildManageTool());
 
+            // Skill module tools
+            foreach (var moduleTool in UnitySkillModuleTools.CreateAll())
+            {
+                ToolRegistry.Register(moduleTool);
+            }
+
             // Start transport
             _transport = new StreamableHttpTransport("http://127.0.0.1:18008/mcp/", "/mcp");
             _transport.OnMessageReceived = CommandRegistry.HandleRequest;

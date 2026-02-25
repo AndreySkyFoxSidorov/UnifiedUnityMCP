@@ -45,21 +45,25 @@ namespace Mcp.Editor.Tools
             {
                 try
                 {
-                    switch (action)
+                    if (action == "find")
                     {
-                        case "find":
-                            HandleFind(arguments, sendResponse);
-                            break;
-                        case "create":
-                            HandleCreate(arguments, sendResponse);
-                            break;
-                        case "destroy":
-                            HandleDestroy(arguments, sendResponse, sendError);
-                            break;
-                        default:
-                            sendError($"Invalid action '{action}'. Use 'find', 'create', 'destroy'.");
-                            break;
+                        HandleFind(arguments, sendResponse);
+                        return;
                     }
+
+                    if (action == "create")
+                    {
+                        HandleCreate(arguments, sendResponse);
+                        return;
+                    }
+
+                    if (action == "destroy")
+                    {
+                        HandleDestroy(arguments, sendResponse, sendError);
+                        return;
+                    }
+
+                    sendError($"Invalid action '{action}'. Use 'find', 'create', 'destroy'.");
                 }
                 catch (Exception e)
                 {

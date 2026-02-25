@@ -12,7 +12,7 @@ namespace Mcp.Editor.Commands
         public void Execute(JSONObject request, Action<JSONObject> sendResponse, Action<int, string> sendError)
         {
             var initResult = new JSONObject();
-            initResult["protocolVersion"] = "2024-11-05";
+            initResult["protocolVersion"] = "2025-03-26";
 
             var serverInfo = new JSONObject();
             serverInfo["name"] = "UnityMcpServer";
