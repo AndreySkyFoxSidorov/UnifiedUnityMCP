@@ -20,6 +20,8 @@ namespace Mcp.Editor.Transport
         private bool _isRunning;
         private readonly string _endpointPath;
         private readonly string _endpointUrl;
+        private readonly int _port;
+        private readonly string _serverSessionId;
 
         // sessionId -> SseStream mapping
         private readonly ConcurrentDictionary<string, SseStream> _sseStreams = new ConcurrentDictionary<string, SseStream>();
@@ -27,8 +29,11 @@ namespace Mcp.Editor.Transport
         // We delegate command handling to this action
         public Action<JSONObject, Action<JSONObject>, Action<int, string>> OnMessageReceived;
 
-        public StreamableHttpTransport(string urlPrefix, string endpointPath)
+        public StreamableHttpTransport(string urlPrefix, string endpointPath, int port, string serverSessionId)
         {
+            _port = port;
+            _serverSessionId = serverSessionId ?? string.Empty;
+
             // URL prefix must end with slash. e.g. "http://127.0.0.1:18008/mcp/"
             if (!urlPrefix.EndsWith("/")) urlPrefix += "/";
             _endpointPath = endpointPath.StartsWith("/") ? endpointPath : "/" + endpointPath;
@@ -37,6 +42,8 @@ namespace Mcp.Editor.Transport
 
             _listener = new HttpListener();
             _listener.Prefixes.Add(urlPrefix);
+            string localhostPrefix = urlPrefix.Replace("127.0.0.1", "localhost");
+            if (localhostPrefix != urlPrefix) _listener.Prefixes.Add(localhostPrefix);
         }
 
         public void Start()
@@ -152,6 +159,23 @@ namespace Mcp.Editor.Transport
 
                 string requestPath = request.Url != null ? request.Url.AbsolutePath.TrimEnd('/') : string.Empty;
                 string expectedPath = _endpointPath.TrimEnd('/');
+
+                if (requestPath == expectedPath + "/heartbeat")
+                {
+                    if (request.HttpMethod == "GET")
+                    {
+                        var json = new JSONObject();
+                        json["ok"] = true;
+                        json["sessionId"] = _serverSessionId;
+                        json["port"] = _port;
+                        SendJsonResponse(response, json.ToString(), 200);
+                    }
+                    else
+                    {
+                        SendStatusCode(response, 405, "Method Not Allowed");
+                    }
+                    return;
+                }
 
                 if (requestPath != expectedPath)
                 {

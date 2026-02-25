@@ -12,12 +12,12 @@ namespace Mcp.Editor.Tests
     public class McpIntegrationTests
     {
         private StreamableHttpTransport _transport;
-        private string _url = "http://127.0.0.1:18009/mcp";
+        private string _url = "http://127.0.0.1:18008/mcp";
 
         [UnitySetUp]
         public IEnumerator SetUp()
         {
-            _transport = new StreamableHttpTransport("http://127.0.0.1:18009/", "/mcp");
+            _transport = new StreamableHttpTransport("http://127.0.0.1:18008/", "/mcp", 18008, "test-session-id");
             _transport.OnMessageReceived = delegate (JSONObject o, System.Action<JSONObject> r, System.Action<int, string> e)
             {
                 // mock command router

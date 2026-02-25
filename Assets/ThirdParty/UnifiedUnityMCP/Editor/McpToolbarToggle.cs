@@ -43,7 +43,10 @@ public static class McpToolbarToggle
 
         if (_isRunning)
         {
-            UnityMcpServer.Start();
+            EditorApplication.delayCall += () =>
+            {
+                if (_isRunning) UnityMcpServer.Start();
+            };
         }
 
         // Hook up UpdateDispatcher
@@ -74,8 +77,17 @@ public static class McpToolbarToggle
         _isRunning = value;
         EditorPrefs.SetBool(PrefKey, _isRunning);
 
-        if (_isRunning) UnityMcpServer.Start();
-        else UnityMcpServer.Stop();
+        if (_isRunning)
+        {
+            EditorApplication.delayCall += () =>
+            {
+                if (_isRunning) UnityMcpServer.Start();
+            };
+        }
+        else
+        {
+            UnityMcpServer.Stop();
+        }
 
         RefreshVisual();
     }
