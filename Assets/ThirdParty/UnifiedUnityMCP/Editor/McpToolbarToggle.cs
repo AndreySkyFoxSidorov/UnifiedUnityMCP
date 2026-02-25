@@ -92,8 +92,8 @@ public static class McpToolbarToggle
     private static string GetColoredLabel()
     {
         if (_isRunning)
-            return $"<color=#33FF33><b>{Label}</b></color>"; // Green when running
-        return $"<color=#CCCCCC>{Label}</color>"; // Default when not
+            return $"<color=#FF3333><b>{Label}</b></color>"; // Red when running
+        return $"<color=#33FF33>{Label}</color>"; // Green when off
     }
 
 #if UNITY_6000_0_OR_NEWER
@@ -130,16 +130,18 @@ public static class McpToolbarToggle
         var root = toolbar.rootVisualElement;
         if (root == null) return false;
 
-        var zone = FindFirstZone(root);
-        if (zone == null) return false;
-
-        var existing = zone.Q<Button>(ButtonName);
+        var existing = root.Q<Button>(ButtonName);
         if (existing != null)
         {
             _legacyButton = existing;
+            _legacyButton.clicked -= Toggle; // Ensure single listener
+            _legacyButton.clicked += Toggle;
             ApplyLegacyVisual();
             return true;
         }
+
+        var zone = FindFirstZone(root);
+        if (zone == null) return false;
 
         _legacyButton = new Button(Toggle)
         {
@@ -154,6 +156,7 @@ public static class McpToolbarToggle
 
         ApplyLegacyVisual();
         zone.Insert(0, _legacyButton);
+        Debug.Log("[MCP Toolbar] Successfully created and added legacy toolbar button.");
         return true;
     }
 
@@ -171,9 +174,14 @@ public static class McpToolbarToggle
         for (int i = 0; i < names.Length; i++)
         {
             var z = root.Q<VisualElement>(names[i]);
-            if (z != null) return z;
+            if (z != null)
+            {
+                Debug.Log($"[MCP Toolbar] Found zone via name: {names[i]}");
+                return z;
+            }
         }
 
+        Debug.LogWarning("[MCP Toolbar] No suitable zone found for toolbar injection.");
         return null;
     }
 
@@ -181,16 +189,15 @@ public static class McpToolbarToggle
     {
         if (_legacyButton == null) return;
 
-        // Button background is green when running, default when not.
         if (_isRunning)
         {
-            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.2f, 0.6f, 0.2f, 1f));
+            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.8f, 0.2f, 0.2f, 1f));
             _legacyButton.style.color = new StyleColor(Color.white);
         }
         else
         {
-            _legacyButton.style.backgroundColor = new StyleColor(StyleKeyword.Null);
-            _legacyButton.style.color = new StyleColor(StyleKeyword.Null);
+            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.2f, 0.8f, 0.2f, 1f));
+            _legacyButton.style.color = new StyleColor(Color.black);
         }
     }
 

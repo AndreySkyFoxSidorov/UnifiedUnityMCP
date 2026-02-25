@@ -46,11 +46,11 @@ namespace Mcp.Editor.Tests
                     initReq["jsonrpc"] = "2.0";
                     initReq["id"] = 1;
                     initReq["method"] = "initialize";
-                    
+
                     var initContent = new StringContent(initReq.ToString(), Encoding.UTF8, "application/json");
                     var initResponse = await client.PostAsync(Endpoint, initContent);
                     initResponse.EnsureSuccessStatusCode();
-                    
+
                     string initResultStr = await initResponse.Content.ReadAsStringAsync();
                     var initJson = JSON.Parse(initResultStr);
                     if (initJson["result"]["serverInfo"]["name"]?.Value == "UnityMcpServer")
@@ -63,29 +63,63 @@ namespace Mcp.Editor.Tests
                         return;
                     }
 
-                    // Test 2: tools/list
-                    var toolsReq = new JSONObject();
-                    toolsReq["jsonrpc"] = "2.0";
-                    toolsReq["id"] = 2;
-                    toolsReq["method"] = "tools/list";
+                    // Test 2: notifications/initialized
+                    var notifReq = new JSONObject();
+                    notifReq["jsonrpc"] = "2.0";
+                    notifReq["method"] = "notifications/initialized";
 
-                    var toolsContent = new StringContent(toolsReq.ToString(), Encoding.UTF8, "application/json");
-                    var toolsResponse = await client.PostAsync(Endpoint, toolsContent);
-                    toolsResponse.EnsureSuccessStatusCode();
+                    var notifContent = new StringContent(notifReq.ToString(), Encoding.UTF8, "application/json");
+                    var notifResponse = await client.PostAsync(Endpoint, notifContent);
+                    notifResponse.EnsureSuccessStatusCode();
+                    Debug.Log("[MCP SmokeTest] notifications/initialized OK!");
 
-                    string toolsResultStr = await toolsResponse.Content.ReadAsStringAsync();
-                    var toolsJson = JSON.Parse(toolsResultStr);
-                    if (toolsJson["result"]["tools"] != null && toolsJson["result"]["tools"].AsArray.Count > 0)
+                    // Test 3: tools/list (Pagination)
+                    int totalToolsFetched = 0;
+                    string currentCursor = null;
+                    var allToolNames = new System.Collections.Generic.List<string>();
+
+                    do
                     {
-                        Debug.Log($"[MCP SmokeTest] tools/list OK! Found {toolsJson["result"]["tools"].AsArray.Count} tools.");
-                    }
-                    else
-                    {
-                        Debug.LogError($"[MCP SmokeTest] tools/list Failed. Output: {toolsResultStr}");
-                        return;
-                    }
+                        var toolsReq = new JSONObject();
+                        toolsReq["jsonrpc"] = "2.0";
+                        toolsReq["id"] = 2; // Can reuse ID for different requests sequentially
+                        toolsReq["method"] = "tools/list";
+                        if (currentCursor != null)
+                        {
+                            var toolsParams = new JSONObject();
+                            toolsParams["cursor"] = currentCursor;
+                            toolsReq["params"] = toolsParams;
+                        }
 
-                    // Test 3: tools/call (unity_ping)
+                        var toolsContent = new StringContent(toolsReq.ToString(), Encoding.UTF8, "application/json");
+                        var toolsResponse = await client.PostAsync(Endpoint, toolsContent);
+                        toolsResponse.EnsureSuccessStatusCode();
+
+                        string toolsResultStr = await toolsResponse.Content.ReadAsStringAsync();
+                        var toolsJson = JSON.Parse(toolsResultStr);
+                        if (toolsJson["result"]["tools"] != null)
+                        {
+                            int fetched = toolsJson["result"]["tools"].AsArray.Count;
+                            totalToolsFetched += fetched;
+
+                            foreach (JSONNode toolNode in toolsJson["result"]["tools"].AsArray)
+                            {
+                                allToolNames.Add(toolNode["name"].Value);
+                            }
+
+                            currentCursor = toolsJson["result"]["nextCursor"]?.Value;
+                        }
+                        else
+                        {
+                            Debug.LogError($"[MCP SmokeTest] tools/list Failed. Output: {toolsResultStr}");
+                            return;
+                        }
+
+                    } while (!string.IsNullOrEmpty(currentCursor));
+
+                    Debug.Log($"[MCP SmokeTest] tools/list OK! Fetched {totalToolsFetched} tools across all pages.\nTools:\n{string.Join(", ", allToolNames)}");
+
+                    // Test 4: tools/call (unity_ping)
                     var invokeReq = new JSONObject();
                     invokeReq["jsonrpc"] = "2.0";
                     invokeReq["id"] = 3;
@@ -102,7 +136,7 @@ namespace Mcp.Editor.Tests
                     string invokeResultStr = await invokeResponse.Content.ReadAsStringAsync();
                     var invokeJson = JSON.Parse(invokeResultStr);
                     string pingResult = invokeJson["result"]?["content"]?[0]?["text"]?.Value;
-                    
+
                     if (!string.IsNullOrEmpty(pingResult) && pingResult.Contains("pong"))
                     {
                         Debug.Log($"[MCP SmokeTest] tools/call (unity_ping) OK! Result: {pingResult}");
@@ -110,6 +144,34 @@ namespace Mcp.Editor.Tests
                     else
                     {
                         Debug.LogError($"[MCP SmokeTest] tools/call Failed. Output: {invokeResultStr}");
+                        return;
+                    }
+
+                    // Test 5: tools/call (Invalid Tool)
+                    var invalidCallReq = new JSONObject();
+                    invalidCallReq["jsonrpc"] = "2.0";
+                    invalidCallReq["id"] = 4;
+                    invalidCallReq["method"] = "tools/call";
+                    var invalidCallParams = new JSONObject();
+                    invalidCallParams["name"] = "non_existent_tool_123";
+                    invalidCallParams["arguments"] = new JSONObject();
+                    invalidCallReq["params"] = invalidCallParams;
+
+                    var invalidCallContent = new StringContent(invalidCallReq.ToString(), Encoding.UTF8, "application/json");
+                    var invalidCallResponse = await client.PostAsync(Endpoint, invalidCallContent);
+                    invalidCallResponse.EnsureSuccessStatusCode();
+
+                    string invalidCallResultStr = await invalidCallResponse.Content.ReadAsStringAsync();
+                    var invalidCallJson = JSON.Parse(invalidCallResultStr);
+
+                    if (invalidCallJson["error"] != null && invalidCallJson["error"]["code"].AsInt == -32602)
+                    {
+                        Debug.Log("[MCP SmokeTest] tools/call (invalid tool) OK! Received expected InvalidParams error.");
+                    }
+                    else
+                    {
+                        Debug.LogError($"[MCP SmokeTest] tools/call (invalid tool) Failed. Output: {invalidCallResultStr}");
+                        return;
                     }
 
                     Debug.Log("[MCP SmokeTest] ALL TESTS PASSED!");

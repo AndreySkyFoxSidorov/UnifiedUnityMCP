@@ -388,53 +388,128 @@ namespace Mcp.Editor.Transport
                     return;
                 }
 
-                // If the message is an array, technically JSON-RPC supports batching, but for simplicity we assume single object
-                if (jsonNode is JSONArray)
-                {
-                    SendJsonResponse(response, JsonRpc.CreateError(null, JsonRpc.InvalidRequest, "Batching not supported").ToString(), 400);
-                    return;
-                }
-
-                var jsonObj = jsonNode as JSONObject;
-                if (jsonObj == null || !jsonObj.HasKey("method"))
-                {
-                    SendJsonResponse(response, JsonRpc.CreateError(jsonObj?["id"], JsonRpc.InvalidRequest, "Missing method").ToString(), 400);
-                    return;
-                }
-
-                string methodName = jsonObj["method"] != null ? jsonObj["method"].Value : string.Empty;
-                bool isInitialize = string.Equals(methodName, "initialize", StringComparison.Ordinal);
-
                 string sessionId = request.Headers["Mcp-Session-Id"];
                 if (!string.IsNullOrEmpty(sessionId))
                 {
                     if (!McpSession.IsValidSession(sessionId))
                     {
-                        SendJsonResponse(response, JsonRpc.CreateError(jsonObj["id"], InvalidSessionErrorCode, "Invalid or expired session id").ToString(), 400);
+                        var reqId = (jsonNode is JSONObject jobj && jobj.HasKey("id")) ? jobj["id"] : null;
+                        SendJsonResponse(response, JsonRpc.CreateError(reqId, InvalidSessionErrorCode, "Invalid or expired session id").ToString(), 404);
                         return;
                     }
-                }
-                else if (isInitialize)
-                {
-                    sessionId = McpSession.CreateSession();
-                }
-
-                if (!string.IsNullOrEmpty(sessionId))
-                {
-                    response.Headers["Mcp-Session-Id"] = sessionId;
                 }
 
                 if (OnMessageReceived == null)
                 {
-                    SendJsonResponse(response, JsonRpc.CreateError(jsonObj["id"], JsonRpc.InternalError, "Command router is not initialized").ToString(), 500);
+                    SendJsonResponse(response, JsonRpc.CreateError(null, JsonRpc.InternalError, "Command router is not initialized").ToString(), 500);
                     return;
                 }
 
-                // Delegate to command router
-                OnMessageReceived.Invoke(jsonObj,
-                    (res) => SendJsonResponse(response, JsonRpc.CreateResponse(jsonObj["id"], res).ToString(), 200),
-                    (code, msg) => SendJsonResponse(response, JsonRpc.CreateError(jsonObj["id"], code, msg).ToString(), 200)
-                );
+                if (jsonNode is JSONArray jsonArray)
+                {
+                    if (jsonArray.Count == 0)
+                    {
+                        SendJsonResponse(response, JsonRpc.CreateError(null, JsonRpc.InvalidRequest, "Empty batch array").ToString(), 400);
+                        return;
+                    }
+
+                    var responseArray = new JSONArray();
+                    int pendingCount = jsonArray.Count;
+                    var mre = new ManualResetEvent(false);
+                    object locker = new object();
+
+                    for (int i = 0; i < jsonArray.Count; i++)
+                    {
+                        var element = jsonArray[i] as JSONObject;
+                        if (element == null)
+                        {
+                            lock (locker) responseArray.Add(JsonRpc.CreateError(null, JsonRpc.InvalidRequest, "Invalid Request"));
+                            if (Interlocked.Decrement(ref pendingCount) == 0) mre.Set();
+                            continue;
+                        }
+
+                        if (!element.HasKey("method"))
+                        {
+                            lock (locker) responseArray.Add(JsonRpc.CreateError(element["id"], JsonRpc.InvalidRequest, "Missing method"));
+                            if (Interlocked.Decrement(ref pendingCount) == 0) mre.Set();
+                            continue;
+                        }
+
+                        bool isBatchNotification = !element.HasKey("id");
+
+                        OnMessageReceived.Invoke(element,
+                            (res) =>
+                            {
+                                if (!isBatchNotification)
+                                {
+                                    lock (locker) responseArray.Add(JsonRpc.CreateResponse(element["id"], res));
+                                }
+                                if (Interlocked.Decrement(ref pendingCount) == 0) mre.Set();
+                            },
+                            (code, msg) =>
+                            {
+                                if (!isBatchNotification)
+                                {
+                                    lock (locker) responseArray.Add(JsonRpc.CreateError(element["id"], code, msg));
+                                }
+                                if (Interlocked.Decrement(ref pendingCount) == 0) mre.Set();
+                            }
+                        );
+                    }
+
+                    mre.WaitOne();
+
+                    if (!string.IsNullOrEmpty(sessionId))
+                    {
+                        response.Headers["Mcp-Session-Id"] = sessionId;
+                    }
+
+                    if (responseArray.Count == 0)
+                    {
+                        SendStatusCode(response, 204);
+                    }
+                    else
+                    {
+                        SendJsonResponse(response, responseArray.ToString(), 200);
+                    }
+                }
+                else
+                {
+                    var jsonObj = jsonNode as JSONObject;
+                    if (jsonObj == null || !jsonObj.HasKey("method"))
+                    {
+                        SendJsonResponse(response, JsonRpc.CreateError(jsonObj?["id"], JsonRpc.InvalidRequest, "Missing method").ToString(), 400);
+                        return;
+                    }
+
+                    string methodName = jsonObj["method"] != null ? jsonObj["method"].Value : string.Empty;
+                    bool isInitialize = string.Equals(methodName, "initialize", StringComparison.Ordinal);
+
+                    if (string.IsNullOrEmpty(sessionId) && isInitialize)
+                    {
+                        sessionId = McpSession.CreateSession();
+                    }
+
+                    if (!string.IsNullOrEmpty(sessionId))
+                    {
+                        response.Headers["Mcp-Session-Id"] = sessionId;
+                    }
+
+                    bool isNotification = !jsonObj.HasKey("id");
+
+                    OnMessageReceived.Invoke(jsonObj,
+                        (res) =>
+                        {
+                            if (isNotification) SendStatusCode(response, 204);
+                            else SendJsonResponse(response, JsonRpc.CreateResponse(jsonObj["id"], res).ToString(), 200);
+                        },
+                        (code, msg) =>
+                        {
+                            if (isNotification) SendStatusCode(response, 204);
+                            else SendJsonResponse(response, JsonRpc.CreateError(jsonObj["id"], code, msg).ToString(), 200);
+                        }
+                    );
+                }
             }
         }
 
