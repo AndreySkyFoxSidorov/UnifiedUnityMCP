@@ -169,7 +169,7 @@
                 <div class="mcp-tool">
                     <strong>Other (Tests, Logs, Builds)</strong><br>
                     Running <code>unity_test_run</code>, injecting #define symbols via <code>unity_build_manage</code>,
-                    subscribing to Debug.Log.
+                    monitoring logs with <code>unity_console_read</code>.
                 </div>
             </div>
         </div>
@@ -208,7 +208,8 @@
                 </div>
                 <div class="card">
                     <h3>unity-collection-pool <span class="badge">Zero-Allocation</span></h3>
-                    <p>A skill that trains AI to completely avoid Garbage Collection drops by using ListPool, DictionaryPool from <code>UnityEngine.Pool</code>.</p>
+                    <p>A skill that trains AI to completely avoid Garbage Collection drops by using ListPool,
+                        DictionaryPool from <code>UnityEngine.Pool</code>.</p>
                 </div>
             </div>
         </div>
@@ -220,83 +221,106 @@
             <div class="grid">
                 <div class="card">
                     <h3>unity-ui-creator <span class="badge">GUI Layout</span></h3>
-                    <p>The absolute expert in Screen/HUD/Menu layout in Unity. Teaches to create the correct Canvas hierarchy
-                        with Anchors, adapt to different screens (Landscape/Portrait, notches), and avoid Layout "flickering".</p>
+                    <p>The absolute expert in Screen/HUD/Menu layout in Unity. Teaches to create the correct Canvas
+                        hierarchy
+                        with Anchors, adapt to different screens (Landscape/Portrait, notches), and avoid Layout
+                        "flickering".</p>
                 </div>
                 <div class="card">
                     <h3>unity-ui-layout-automation <span class="badge">Auto-validation</span></h3>
-                    <p>Scripts and instructions for automatic validation of Canvas structure, adding text localization, and
+                    <p>Scripts and instructions for automatic validation of Canvas structure, adding text localization,
+                        and
                         checking for animations via MCP.</p>
                 </div>
                 <div class="card">
                     <h3>unity-textmeshpro <span class="badge">Typography</span></h3>
-                    <p>Deep knowledge of TMPro profiling: creating Font Assets, Rich Text, materials for shadows/highlights.</p>
+                    <p>Deep knowledge of TMPro profiling: creating Font Assets, Rich Text, materials for
+                        shadows/highlights.</p>
                 </div>
                 <div class="card">
                     <h3>csharp-xml-docs <span class="badge">Documentation</span></h3>
                     <p>Strict standard for automatic XML documentation: creating clear <code>summary</code>,
-                        <code>param</code>, <code>returns</code> in pure English without fluff (Haiku Style).</p>
+                        <code>param</code>, <code>returns</code> in pure English without fluff (Haiku Style).
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- The Grand Index Section -->
+        <!-- The 52 Tools Catalog Section -->
         <div class="section-box">
-            <h2>🛠 The Grand Unity Hierarchy (unity-skills-index)</h2>
-            <p>A giant educational reference manual divided into 35+ micro-skills. <strong>Important:</strong> The AI
-                uses these knowledges as a <em>"What to do" reference</em>, but it automatically <em>translates</em>
-                commands via the Unified Unity MCP Server using a special mapping table.</p>
+            <h2>🛠 Complete MCP Tools Catalog (52 Tools)</h2>
+            <p>The server directly provides exactly <strong>52 specialized Unity tools</strong> for the AI to manipulate
+                the editor. These are divided into <strong>16 Core Tools</strong> (direct, high-performance API
+                wrappers) and <strong>36 Module Tools</strong> (higher-level domain workflows).</p>
 
             <table>
                 <thead>
                     <tr>
-                        <th>Sub-Skill</th>
+                        <th>Category</th>
+                        <th>MCP Tools</th>
                         <th>Description (Area of Responsibility)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><code>gameobject</code>, <code>component</code>, <code>prefab</code></td>
-                        <td>Main object manipulations: hierarchical creation, script attachment, and prefab spawning.
-                        </td>
+                        <td><strong>Core Utilities</strong></td>
+                        <td><code>unity_ping</code>, <code>unity_console_read</code>, <code>unity_editor_state</code>,
+                            <code>unity_editor_set_state</code>, <code>unity_selection_get</code>,
+                            <code>unity_editor_execute_menu</code></td>
+                        <td>Managing Editor Play/Pause, checking compilation, reading console output, parsing current
+                            selection.</td>
                     </tr>
                     <tr>
-                        <td><code>scene</code>, <code>asset</code>, <code>importer</code></td>
-                        <td>Loading scenes, moving objects via directories in the AssetDatabase, configuring texture/audio/model compression.</td>
+                        <td><strong>Core Objects & Assets</strong></td>
+                        <td><code>unity_gameobject_manage</code>, <code>unity_component_manage</code>,
+                            <code>unity_component_property</code>, <code>unity_asset_manage</code>,
+                            <code>unity_prefab_instantiate</code>, <code>unity_scene_manage</code>,
+                            <code>unity_asset_create</code>, <code>unity_asset_meta</code></td>
+                        <td>Deep reflection-based component modification, prefab instantiation, asset/scene opening,
+                            manipulating .meta files directly.</td>
                     </tr>
                     <tr>
-                        <td><code>material</code>, <code>shader</code>, <code>light</code></td>
-                        <td>Setting colors/textures in materials, creating custom shaders, configuring global lighting.</td>
+                        <td><strong>Core Advanced</strong></td>
+                        <td><code>unity_test_run</code>, <code>unity_build_manage</code></td>
+                        <td>Running EditMode/PlayMode automated tests, updating Scripting Defines for builds.</td>
                     </tr>
                     <tr>
-                        <td><code>physics</code>, <code>navmesh</code>, <code>terrain</code></td>
-                        <td>Executing Raycasts, configuring colliders and gravity, baking pathways for artificial
-                            intelligence, sculpting forests/mountains on Terrain.</td>
+                        <td><strong>Module: Scene & Hierarchy</strong></td>
+                        <td><code>unity_scene</code>, <code>unity_gameobject</code>, <code>unity_component</code>,
+                            <code>unity_prefab</code>, <code>unity_bookmark</code>, <code>unity_history</code>,
+                            <code>unity_smart</code>, <code>unity_workflow</code></td>
+                        <td>High-level scene query and filtering, editor undo/redo history, saved selections, smart
+                            layout operations.</td>
                     </tr>
                     <tr>
-                        <td><code>editor</code>, <code>camera</code>, <code>console</code></td>
-                        <td>Managing the Editor itself: Play Mode, selection, moving the camera in the Scene view,
-                            searching for errors in the console.</td>
+                        <td><strong>Module: Assets & Project</strong></td>
+                        <td><code>unity_asset</code>, <code>unity_importer</code>, <code>unity_package</code>,
+                            <code>unity_project</code>, <code>unity_script</code>, <code>unity_scriptableobject</code>,
+                            <code>unity_shader</code>, <code>unity_material</code></td>
+                        <td>Package manifest scanning, generating C# files, scriptable object templates, material and
+                            shader management.</td>
                     </tr>
                     <tr>
-                        <td><code>cinemachine</code>, <code>timeline</code>, <code>animator</code></td>
-                        <td>Configuring virtual and follow cameras (Follow/LookAt), generating cutscenes, creating
-                            animation controllers.</td>
+                        <td><strong>Module: Rendering & UI</strong></td>
+                        <td><code>unity_ui</code>, <code>unity_camera</code>, <code>unity_cinemachine</code>,
+                            <code>unity_light</code>, <code>unity_animator</code>, <code>unity_timeline</code>,
+                            <code>unity_perception</code></td>
+                        <td>Canvas building, virtual camera cutscenes, timeline tracks, lighting setups, spatial
+                            perception.</td>
                     </tr>
                     <tr>
-                        <td><code>ui</code>, <code>event</code>, <code>scriptableobject</code></td>
-                        <td>Building buttons, configuring onClick() events for UI, generating and editing
-                            ScriptableObject (as game config database).</td>
+                        <td><strong>Module: Systems</strong></td>
+                        <td><code>unity_physics</code>, <code>unity_navmesh</code>, <code>unity_terrain</code>,
+                            <code>unity_event</code></td>
+                        <td>Raycasting, collider setups, AI path baking, terrain generation, C# UnityEvent wiring.</td>
                     </tr>
                     <tr>
-                        <td><code>optimization</code>, <code>profiler</code>, <code>validation</code></td>
-                        <td>Checking the project for "broken" scripts and missing references, collecting performance stats.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><code>smart</code>, <code>cleaner</code>, <code>perception</code></td>
-                        <td>Smart SQL queries for objects inside the scene (search by color or layer), removing
-                            dead or duplicated code, analyzing scene dependencies.</td>
+                        <td><strong>Module: Quality</strong></td>
+                        <td><code>unity_cleaner</code>, <code>unity_debug</code>, <code>unity_editor</code>,
+                            <code>unity_console</code>, <code>unity_optimization</code>, <code>unity_profiler</code>,
+                            <code>unity_test</code>, <code>unity_validation</code>, <code>unity_sample</code></td>
+                        <td>Finding missing scripts/empty folders, measuring frame rate, removing dead textures,
+                            continuous integration flows.</td>
                     </tr>
                 </tbody>
             </table>
@@ -358,7 +382,7 @@
 
                 <!-- The Grand Index (Scene, Prefabs, Editor) -->
                 <div class="card">
-                    <h3>🛠️ Scene and Object Manipulations (unity-skills-index)</h3>
+                    <h3>🛠️ Scene and Object Manipulations</h3>
                     <ul>
                         <li><code>Use the 'unity.gameobject.find' tool to find the GameObject named 'PlayerSpotlight'. Then use 'unity_component_property' to dynamically change its Light intensity to 12.5 and its color to pure Red.</code>
                         </li>
@@ -370,7 +394,7 @@
                         </li>
                         <li><code>Find all GameObjects with the 'BoxCollider' component attached. For each one, use 'unity_component_property' to set their 'isTrigger' boolean to true.</code>
                         </li>
-                        <li><code>Read the instructions in 'unity-skills-index/navmesh' to understand the parameters. Then, bake a new navigation mesh for the current scene geometry.</code>
+                        <li><code>Use the 'unity_navmesh' MCP tool to bake a new navigation mesh for the current scene geometry.</code>
                         </li>
                         <li><code>Save my current scene using 'unity_scene_manage', then open 'Assets/Scenes/Level_02.unity'. Once opened, find the 'SpawnPoint' object and move it to coordinates 10, 0, 50.</code>
                         </li>
@@ -379,7 +403,8 @@
             </div>
         </div>
 
-        <p style="text-align: center; color: #64748b; font-size: 0.9em;">Generated by Artificial Intelligence "Antigravity". Data is up to date and consistent with the Unified MCP Architecture.</p>
+        <p style="text-align: center; color: #64748b; font-size: 0.9em;">Generated by Artificial Intelligence
+            "Antigravity". Data is up to date and consistent with the Unified MCP Architecture.</p>
 
     </div>
 

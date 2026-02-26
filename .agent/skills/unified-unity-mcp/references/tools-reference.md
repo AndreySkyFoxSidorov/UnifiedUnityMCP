@@ -1,165 +1,95 @@
-# Unified Unity MCP Tools Reference
+﻿# Unified Unity MCP Tools Reference
 
-This document lists all 20 tools available in the Unified Unity MCP Server, detailing their exact input schemas, return values, and expected behavior.
+This document lists all 52 tools (16 Core + 36 Module) available in the Unified Unity MCP Server.
 
-## Core Unity Info
+## Core Tools
 
-### `unity_ping`
-- **Description**: Returns "pong" and the current Unity Editor version and platform. Use to ensure connection is alive.
-- **Parameters**: None `{}`
-- **Returns**: `{"content": "pong! Unity Version: 6000.3.x, Platform: WindowsEditor"}`
+### "unity_ping"
+- **Description**: Returns pong and current Unity version
 
-### `unity_console_read`
-- **Description**: Capture Unity Editor Console logs.
-- **Parameters**: 
-  - `maxLines` (optional, int): Max number of logs to read (default 50).
-  - `typeFilter` (optional, string): Filter logs by type ("Error", "Warning", "Log", "Exception", "Assert").
-- **Returns**: Formatted text block with log messages.
+### "unity_console_read"
+- **Description**: Reads Unity Editor Console logs
 
-## Editor State
+### "unity_editor_state"
+- **Description**: Returns current Editor play mode state
 
-### `unity_editor_state`
-- **Description**: Get current PlayMode and compile state of the Unity Editor. Very important to check before making large changes or executing menus.
-- **Parameters**: None `{}`
-- **Returns**: `{"isPlaying": false, "isPaused": false, "isCompiling": false}`
+### "unity_editor_set_state"
+- **Description**: Sets the editor state (play, pause, stop)
 
-### `unity_editor_set_state`
-- **Description**: Change the PlayMode state.
-- **Parameters**: 
-  - `state` (required, string): One of `"play"`, `"pause"`, `"stop"`.
-- **Returns**: New play state status string.
+### "unity_selection_get"
+- **Description**: Gets currently selected objects
 
-### `unity_editor_execute_menu`
-- **Description**: Programmatically click a menu item from the Unity Editor's top bar.
-- **Parameters**:
-  - `menuPath` (required, string): Exact path, e.g., `"Assets/Create/Folder"`.
-- **Returns**: Success string. Note: Fails natively if the path is invalid (logs to console).
+### "unity_gameobject_manage"
+- **Description**: GameObject find/create/destroy actions
 
-## Selection
+### "unity_component_manage"
+- **Description**: Component add/remove/list actions
 
-### `unity_selection_get`
-- **Description**: Retrieve an array of currently selected GameObjects or Assets.
-- **Parameters**: None `{}`
-- **Returns**: `{"selected": [{"name": "Cube", "instanceId": 1234, "assetPath": "null"}]}`
+### "unity_asset_manage"
+- **Description**: Asset find/refresh actions
 
-### `unity.selection.set`
-- **Description**: Set the Unity Editor's current selection.
-- **Parameters**:
-  - `instanceIds` (required, int[]): Array of integer InstanceIDs.
-- **Returns**: Success status.
+### "unity_prefab_instantiate"
+- **Description**: Instantiate prefab asset into active scene
 
-## GameObject Management
+### "unity_asset_meta"
+- **Description**: Read/write importer properties via SerializedProperty
 
-### `unity.gameobject.find`
-- **Description**: Find GameObjects in the scene.
-- **Parameters**:
-  - `name` (optional, string): Exact object name to find.
-  - `tag` (optional, string): Tag to match.
-  - *Must provide at least one filter.*
-- **Returns**: `{"found": [{"name": "Player", "instanceId": 5678, "scene": "main"}]}`
+### "unity_component_property"
+- **Description**: Reflection get/set/dump/invoke for component members
 
-### `unity.gameobject.create`
-- **Description**: Create a single GameObject.
-- **Parameters**:
-  - `name` (required, string): Name of the new object.
-  - `primitiveType` (optional, string): E.g., `"Cube"`, `"Sphere"`, `"Capsule"`.
-  - `parentRoute` (optional, string): Hierarchy path to parent under.
-- **Returns**: `{"status": "Created", "name": "...", "instanceId": 1234}`
+### "unity_scene_manage"
+- **Description**: Scene open/save/new/list_build_scenes actions
 
-### `unity.gameobject.destroy`
-- **Description**: Delete a GameObject.
-- **Parameters**:
-  - `instanceId` (required, int): InstanceID of the target object.
-- **Returns**: Success status.
+### "unity_asset_create"
+- **Description**: Create folder/material assets
 
-## Component & Property Management
+### "unity_editor_execute_menu"
+- **Description**: Execute Unity Editor menu item
 
-### `unity.component.add`
-- **Description**: Attach a built-in or custom Component to an object.
-- **Parameters**:
-  - `instanceId` (required, int): Target GameObject.
-  - `componentType` (required, string): E.g., `"UnityEngine.Rigidbody"`, `"PlayerController"`.
-- **Returns**: Success status.
+### "unity_test_run"
+- **Description**: Run Unity Test Runner (EditMode/PlayMode)
 
-### `unity_component_property`
-- **Description**: Get, Set, or Dump properties of a Component via C# Reflection.
-- **Parameters**:
-  - `action` (required, string): `"get"`, `"set"`, or `"dump"`.
-  - `instanceId` (required, int): Target GameObject.
-  - `property` (optional, string): Name of the C# property/field to get/set. Empty string for `dump`.
-  - `value` (optional, any): Value to set (number, boolean, string, or vector/color struct).
-- **Returns**:
-  - `dump`: Array of `"name"`, `"type"`, `"value"`, `"canWrite"`.
-  - `get`: Property value dynamically typed.
-  - `set`: Success status.
+### "unity_build_manage"
+- **Description**: Get/set defines and run build action
 
-## Scenes
+## Module Tools
 
-### `unity_scene_manage`
-- **Description**: Manage Unity scenes.
-- **Parameters**:
-  - `action` (required, string): `"open"`, `"save"`, `"new"`, or `"list_build_scenes"`.
-  - `path` (optional, string): Path to scene (required for `"open"`).
-- **Returns**: Success status or list of scenes.
+Module tools follow the standard envelope format using `action` argument. Call `action: "list_actions"` to see precise capabilities for each module.
 
-## Asset Management
+- **"unity_animator"**: Module tool for animator operations.
+- **"unity_asset"**: Module tool for asset operations.
+- **"unity_bookmark"**: Module tool for bookmark operations.
+- **"unity_camera"**: Module tool for camera operations.
+- **"unity_cinemachine"**: Module tool for cinemachine operations.
+- **"unity_cleaner"**: Module tool for cleaner operations.
+- **"unity_component"**: Module tool for component operations.
+- **"unity_console"**: Module tool for console operations.
+- **"unity_debug"**: Module tool for debug operations.
+- **"unity_editor"**: Module tool for editor operations.
+- **"unity_event"**: Module tool for event operations.
+- **"unity_gameobject"**: Module tool for gameobject operations.
+- **"unity_history"**: Module tool for history operations.
+- **"unity_importer"**: Module tool for importer operations.
+- **"unity_light"**: Module tool for light operations.
+- **"unity_material"**: Module tool for material operations.
+- **"unity_navmesh"**: Module tool for navmesh operations.
+- **"unity_optimization"**: Module tool for optimization operations.
+- **"unity_package"**: Module tool for package operations.
+- **"unity_perception"**: Module tool for perception operations.
+- **"unity_physics"**: Module tool for physics operations.
+- **"unity_prefab"**: Module tool for prefab operations.
+- **"unity_profiler"**: Module tool for profiler operations.
+- **"unity_project"**: Module tool for project operations.
+- **"unity_sample"**: Module tool for sample operations.
+- **"unity_scene"**: Module tool for scene operations.
+- **"unity_script"**: Module tool for script operations.
+- **"unity_scriptableobject"**: Module tool for scriptableobject operations.
+- **"unity_shader"**: Module tool for shader operations.
+- **"unity_smart"**: Module tool for smart operations.
+- **"unity_terrain"**: Module tool for terrain operations.
+- **"unity_test"**: Module tool for test operations.
+- **"unity_timeline"**: Module tool for timeline operations.
+- **"unity_ui"**: Module tool for ui operations.
+- **"unity_validation"**: Module tool for validation operations.
+- **"unity_workflow"**: Module tool for workflow operations.
 
-### `unity.asset.find`
-- **Description**: Search for assets in the project.
-- **Parameters**:
-  - `filter` (required, string): Unity search filter string (e.g. `"t:Prefab"`, `"Player"`).
-  - `folders` (optional, string[]): Array of paths to limit search to.
-- **Returns**: `{"assets": ["Assets/Prefabs/Player.prefab", ...]}`
-
-### `unity_asset_create`
-- **Description**: Create specific basic assets directly.
-- **Parameters**:
-  - `action` (required, string): `"folder"` or `"material"`.
-  - `path` (required, string): E.g., `"Assets/NewFolder"`.
-  - `shader` (optional, string): If material, the shader name (default `"Standard"` or URP equivalent).
-- **Returns**: New GUID or Asset Path.
-
-### `unity_asset_meta`
-- **Description**: Interrogate and modify Unity `.meta` (Importer) settings directly.
-- **Parameters**:
-  - `action` (required, string): `"dump"`, `"get"`, or `"set"`.
-  - `path` (required, string): Path to the target asset.
-  - `property` (optional, string): SerializedProperty path to get/set (e.g., `"m_TextureSettings.m_FilterMode"`).
-  - `value` (optional, any): Value to assign on "set".
-- **Returns**:
-  - `dump`: Array of properties and their data types.
-  - `get`: Current value natively extracted.
-  - `set`: Success status.
-
-### `unity.asset.refresh`
-- **Description**: Manually trigger `AssetDatabase.Refresh()`.
-- **Parameters**: None `{}`
-- **Returns**: Success status.
-
-### `unity_prefab_instantiate`
-- **Description**: Spawn a Prefab asset into the scene.
-- **Parameters**:
-  - `assetPath` (required, string): E.g., `"Assets/Prefabs/Player.prefab"`.
-  - `position` (optional, object): `{"x":0, "y":0, "z":0}`
-- **Returns**: Root `instanceId` of instantiated object.
-
-## Build and Testing
-
-### `unity_test_run`
-- **Description**: Execute Unity Editor tests.
-- **Parameters**:
-  - `mode` (required, string): `"editmode"` or `"playmode"`.
-- **Returns**: Extensive JSON report including passed/failed counts. Note: Locks the editor during execution.
-
-### `unity_build_manage`
-- **Description**: Manage Scripting Defines, or kick off a Build.
-- **Parameters**:
-  - `action` (required, string): `"get_defines"`, `"set_defines"`, `"build_player"`.
-  - `defines` (optional, string): For set_defines, semi-colon separated (e.g., `"DEBUG;PROFILING"`).
-  - `buildTarget` (optional, string): For build action, e.g., `"Android"`, `"StandaloneWindows64"`.
-- **Returns**: Result of operation or Build Report summary.
-
-
-## Naming note
-
-Some tool IDs use dot naming (for example `unity.gameobject.create`, `unity.selection.set`), and some use underscore naming (for example `unity_component_property`, `unity_scene_manage`). These are canonical server IDs and should be used exactly as listed.

@@ -38,21 +38,25 @@ namespace Mcp.Editor.Tools
             {
                 try
                 {
-                    switch (state.ToLower())
+                    string normalized = state.ToLower();
+
+                    if (normalized == "play")
                     {
-                        case "play":
-                            if (!EditorApplication.isPlaying) EditorApplication.isPlaying = true;
-                            if (EditorApplication.isPaused) EditorApplication.isPaused = false;
-                            break;
-                        case "pause":
-                            if (EditorApplication.isPlaying) EditorApplication.isPaused = true;
-                            break;
-                        case "stop":
-                            if (EditorApplication.isPlaying) EditorApplication.isPlaying = false;
-                            break;
-                        default:
-                            sendError($"Invalid state: {state}. Use 'play', 'pause', or 'stop'.");
-                            return;
+                        if (!EditorApplication.isPlaying) EditorApplication.isPlaying = true;
+                        if (EditorApplication.isPaused) EditorApplication.isPaused = false;
+                    }
+                    else if (normalized == "pause")
+                    {
+                        if (EditorApplication.isPlaying) EditorApplication.isPaused = true;
+                    }
+                    else if (normalized == "stop")
+                    {
+                        if (EditorApplication.isPlaying) EditorApplication.isPlaying = false;
+                    }
+                    else
+                    {
+                        sendError($"Invalid state: {state}. Use 'play', 'pause', or 'stop'.");
+                        return;
                     }
 
                     var result = new JSONObject();

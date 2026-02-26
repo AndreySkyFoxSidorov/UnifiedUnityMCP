@@ -1,64 +1,102 @@
-# Tools Catalog
+# Unified Unity MCP Tools Catalog
 
-## 1. CoplayDev-unity-mcp
-*This server uses string-based identifiers and loosely typed JObject payloads for arguments. Many tools act as generic dispatchers for multiple actions (e.g. `action: "create"`, `action: "delete"`).*
+This catalog documents the active tools exposed by the server in [UnityMcpServer.Start()](Assets/ThirdParty/UnifiedUnityMCP/Editor/UnityMcpServer.cs:22).
 
-| Tool/Method | Purpose | Params schema | Result schema | Unity main-thread required | Notes |
-|-------------|---------|---------------|---------------|----------------------------|-------|
-| `execute_menu_item` | Execute an Editor Menu Item | `{ "menuPath": string }` | Text/Success | Yes | |
-| `find_gameobjects` | Find objects in scene by name/tag/layer | `{ "name": string, "tag": string, "layer": string }` | List of references | Yes | |
-| `manage_script` | Attach/detach scripts | `{ "action": string, "target": string, "scriptName": string }` | Success/Failure | Yes | Includes actions like `attach`, `detach`. |
-| `refresh_unity` | Refresh AssetDatabase | `{}` | Success | Yes | `AssetDatabase.Refresh()` |
-| `run_tests` | Run EditMode/PlayMode tests | `{ "mode": string }` | Job ID string | Yes | Runs synchronously or async depending on mode. |
-| `manage_prefabs` | Open/Close prefab stages | `{ "action": string, "path": string }` | Success/Failure | Yes | Actions: `open_stage`, `close_stage`, `save`. |
-| `read_console` | Capture Unity Editor Console | `{ "logType": string, "maxLines": int }` | String of logs | Yes | Reads `LogEntries` via reflection. |
-| `manage_gameobject` | CRUD for GameObjects | `{ "action": string, "target": string, "componentProperties": object }` | ID / Success | Yes | Heavy dispatcher: `create`, `modify`, `delete`, `duplicate`. |
-| `manage_asset` | CRUD for Assets | `{ "action": string, "path": string, "newPath": string }` | Success/Failure | Yes | Dispatcher: `copy`, `move`, `delete`, `create_folder`. |
-| `manage_editor` | Play/Pause/Stop/Select | `{ "action": string, "target": string }` | State/Success | Yes | `play`, `pause`, `stop`, `select`. |
+Protocol baseline for transport + initialize handshake:
+- [StreamableHttpTransport](Assets/ThirdParty/UnifiedUnityMCP/Editor/Transport/StreamableHttpTransport.cs:13)
+- [InitializeCommand.Execute()](Assets/ThirdParty/UnifiedUnityMCP/Editor/Commands/StandardCommands.cs:12)
 
-*Note: This server also supports `initialize`, `tools/list`, and `tools/call` JSON-RPC methods.*
+## 1) Core Tools (registered directly)
 
----
+| Tool | Source | Purpose |
+|---|---|---|
+| `unity_ping` | [UnityPingTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/UnityPingTool.cs:8) | Connectivity/version ping |
+| `unity_console_read` | [ConsoleGetLogsTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/ConsoleGetLogsTool.cs:11) | Read Unity Console logs |
+| `unity_editor_state` | [EditorGetStateTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/EditorGetStateTool.cs:9) | Get play/pause/compile state |
+| `unity_editor_set_state` | [EditorSetStateTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/EditorSetStateTool.cs:9) | Set play/pause/stop |
+| `unity_selection_get` | [EditorSelectionTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/EditorSelectionTool.cs:9) | Get current editor selection |
+| `unity_gameobject_manage` | [GameObjectManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/GameObjectManageTool.cs:12) | `find/create/destroy` scene objects |
+| `unity_component_manage` | [ComponentManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/ComponentManageTool.cs:10) | `add/remove/list` components |
+| `unity_asset_manage` | [AssetManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/AssetManageTool.cs:9) | `find/refresh` assets |
+| `unity_prefab_instantiate` | [PrefabManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/PrefabManageTool.cs:10) | Instantiate prefab |
+| `unity_asset_meta` | [AssetMetaManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/AssetMetaManageTool.cs:10) | Importer/meta read-write |
+| `unity_component_property` | [ComponentPropertyTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/ComponentPropertyTool.cs:14) | Reflection `get/set/dump/invoke` |
+| `unity_scene_manage` | [SceneManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/SceneManageTool.cs:11) | `open/save/new/list_build_scenes` |
+| `unity_asset_create` | [AssetCreateTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/AssetCreateTool.cs:11) | Create material/folder |
+| `unity_editor_execute_menu` | [ExecuteMenuTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/ExecuteMenuTool.cs:9) | Execute menu item |
+| `unity_test_run` | [TestRunTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/TestRunTool.cs:12) | Run Unity tests |
+| `unity_build_manage` | [BuildManageTool](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/BuildManageTool.cs:10) | Defines/build management |
 
-## 2. IvanMurzak-Unity-MCP
-*This server uses strongly-typed attributes `[McpPluginTool]` with Reflection. Tools are granular and map closely to single C# methods.*
+## 2) Skill Module Tools
 
-| Tool/Method | Purpose | Params schema | Result schema | Unity main-thread required | Notes |
-|-------------|---------|---------------|---------------|----------------------------|-------|
-| `Assets.Find` | Find asset GUIDs | `{ "filter": string, "searchInFolders": string[] }` | List of GUIDs/Paths | Yes | Uses `AssetDatabase.FindAssets` |
-| `Assets.CreateFolders` | Create missing folders | `{ "parentFolder": string, "newFolderName": string }` | Success/Path | Yes | |
-| `GameObject.Create` | Instantiate new GameObject | `{ "name": string, "parentGameObjectRef": object, "position": vector3 }` | `GameObjectRef` | Yes | Highly typed parameters (Vector3, bool). |
-| `GameObject.Destroy` | Destroy a GameObject | `{ "gameObjectRef": object }` | Success | Yes | |
-| `GameObject.Find` | Find by Name/Tag | `{ "name": string, "tag": string }` | List of `GameObjectRef` | Yes | |
-| `GameObject.Component.Add` | Add a component | `{ "gameObjectRef": object, "componentType": string }` | `ComponentRef` | Yes | |
-| `Editor.Application.GetState` | IsPlaying, IsPaused | `{}` | `{ isPlaying: bool, isPaused: bool }` | Yes | |
-| `Editor.Selection.Get` | Get selected objects | `{}` | List of `GameObjectRef` | Yes | |
+Factory entrypoint: [UnitySkillModuleTools.CreateAll()](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/UnitySkillModuleTools.cs:151)
 
-*Note: This server also implements strict JSON schemas derived from C# parameter types via reflection.*
+### Mapping table: module -> MCP tool
 
----
+| Skill module | MCP tool name |
+|---|---|
+| `animator` | `unity_animator` |
+| `asset` | `unity_asset` |
+| `bookmark` | `unity_bookmark` |
+| `camera` | `unity_camera` |
+| `cinemachine` | `unity_cinemachine` |
+| `cleaner` | `unity_cleaner` |
+| `component` | `unity_component` |
+| `console` | `unity_console` |
+| `debug` | `unity_debug` |
+| `editor` | `unity_editor` |
+| `event` | `unity_event` |
+| `gameobject` | `unity_gameobject` |
+| `history` | `unity_history` |
+| `importer` | `unity_importer` |
+| `light` | `unity_light` |
+| `material` | `unity_material` |
+| `navmesh` | `unity_navmesh` |
+| `optimization` | `unity_optimization` |
+| `package` | `unity_package` |
+| `perception` | `unity_perception` |
+| `physics` | `unity_physics` |
+| `prefab` | `unity_prefab` |
+| `profiler` | `unity_profiler` |
+| `project` | `unity_project` |
+| `sample` | `unity_sample` |
+| `scene` | `unity_scene` |
+| `script` | `unity_script` |
+| `scriptableobject` | `unity_scriptableobject` |
+| `shader` | `unity_shader` |
+| `smart` | `unity_smart` |
+| `terrain` | `unity_terrain` |
+| `test` | `unity_test` |
+| `timeline` | `unity_timeline` |
+| `ui` | `unity_ui` |
+| `validation` | `unity_validation` |
+| `workflow` | `unity_workflow` |
 
-## 3. Combined Targets for Unified Server
-*We will implement a clean, granular set of tools blending the best of both approaches. Tools will have distinct names (avoiding generic `manage_xxx` dispatchers).*
+### Module tool behavior
 
-| Tool/Method | Purpose | Params schema | Result schema | Unity main-thread required |
-|-------------|---------|---------------|---------------|----------------------------|
-| `unity_ping` | Basic connectivity check & version | `{}` | `{ version: string }` | No (or Yes for version) |
-| `unity_console_read` | Read Editor Console logs | `{ "maxLines": int, "typeFilter": string }` | Array of log strings | Yes |
-| `unity_editor_state` | Get/Set PlayMode state | `{ "state": string ("play","pause","stop") }` | `{ isPlaying: true }` | Yes |
-| `unity_selection_get` | Get currently selected objects | `{}` | Array of object paths/IDs | Yes |
-| `unity.selection.set` | Set selection | `{ "instanceIds": int[] }` | Success | Yes |
-| `unity.gameobject.find` | Find objects by name or tag | `{ "name": string, "tag": string }` | Array of object info | Yes |
-| `unity.gameobject.create`| Create empty or primitive | `{ "name": string, "primitiveType": string, "parentRoute": string }`| New Object ID | Yes |
-| `unity.gameobject.destroy`| Destroy an object | `{ "instanceId": int }` | Success | Yes |
-| `unity.component.add` | Add component to object | `{ "instanceId": int, "componentType": string }` | Success | Yes |
-| `unity.asset.find` | Find assets | `{ "filter": string, "folders": string[] }` | Array of paths | Yes |
-| `unity.asset.refresh` | Refresh AssetDatabase | `{}` | Success | Yes |
-| `unity_asset_meta` | Dump/Get/Set .meta properties via Importer | `{ "action": string, "path": string, "property": string, "value": any }` | Success/List | Yes |
-| `unity_prefab_instantiate`| Instantiate prefab at path | `{ "assetPath": string, "position": object }` | New Object ID | Yes |
-| `unity_component_property`| Get/Set component properties via reflection | `{ "action": string, "instanceId": int, "property": string, "value": any }` | Success/Value | Yes |
-| `unity_scene_manage`      | Open/Save/Create scenes  | `{ "action": string, "path": string }`        | Success/State   | Yes |
-| `unity_asset_create`      | Create Materials/Folders | `{ "action": string, "path": string, "shader": string }` | Success/Path  | Yes |
-| `unity_test_run`          | Run Unity Edit/Play tests| `{ "mode": "editmode" or "playmode" }`        | Test Results    | Yes |
-| `unity_editor_execute_menu`| Execute top menu items  | `{ "menuPath": string }`                      | Success         | Yes |
-| `unity_build_manage`      | Get/Set defines, Build   | `{ "action": string, "defines": string, "buildTarget": string }` | Success/Report | Yes |
+All module tools use [UnityModuleTool.Execute()](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/UnitySkillModuleTools.cs:67):
+- `action="list_actions"` (or `help/capabilities`) returns documented actions + implementation flag.
+- Implemented actions are dispatched to module handlers.
+- Non-implemented documented actions return `status="not_implemented"` with guidance.
+- Most modules include `action="bridge"` to forward to existing core tools.
+
+## 3) Coverage status notes
+
+- **Complete module presence**: every module has a corresponding module tool created in [UnitySkillModuleTools.CreateAll()](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/UnitySkillModuleTools.cs:151).
+- **Implemented subset**: critical/high-frequency actions (scene/gameobject/component/debug/console/package/physics/validation/project/sample/bookmark/camera/perception/navmesh/history/test) are implemented now.
+- **Bridge/not_implemented fallback**: long-tail actions remain documented and callable via module entrypoints, with explicit status feedback.
+
+## 4) Threading and safety
+
+- Module handlers are marshaled onto main thread by [UnityModuleTool.Execute()](Assets/ThirdParty/UnifiedUnityMCP/Editor/Tools/UnitySkillModuleTools.cs:67) via [MainThreadDispatcher.InvokeAsync()](Assets/ThirdParty/UnifiedUnityMCP/Editor/Util/MainThreadDispatcher.cs:45).
+- Core tools already marshal Unity API calls internally (or are non-Unity runtime safe where applicable).
+
+## 5) Transport compliance summary
+
+HTTP transport in [StreamableHttpTransport](Assets/ThirdParty/UnifiedUnityMCP/Editor/Transport/StreamableHttpTransport.cs:13) provides:
+- Single endpoint path with `POST` + `GET` + optional `DELETE`
+- `Accept` / JSON content-type checks
+- Session propagation through `Mcp-Session-Id`
+- Origin and localhost restrictions
+
+Initialize protocol version: [StandardCommands.InitializeCommand](Assets/ThirdParty/UnifiedUnityMCP/Editor/Commands/StandardCommands.cs:8) now reports `2025-03-26`.

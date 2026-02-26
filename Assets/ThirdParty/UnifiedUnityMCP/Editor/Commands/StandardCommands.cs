@@ -12,7 +12,7 @@ namespace Mcp.Editor.Commands
         public void Execute(JSONObject request, Action<JSONObject> sendResponse, Action<int, string> sendError)
         {
             var initResult = new JSONObject();
-            initResult["protocolVersion"] = "2024-11-05";
+            initResult["protocolVersion"] = "2025-03-26";
 
             var serverInfo = new JSONObject();
             serverInfo["name"] = "UnityMcpServer";
@@ -20,7 +20,9 @@ namespace Mcp.Editor.Commands
             initResult["serverInfo"] = serverInfo;
 
             var capabilities = new JSONObject();
-            capabilities["tools"] = new JSONObject(); // Indicate tool support
+            var toolsCapability = new JSONObject();
+            toolsCapability["listChanged"] = false;
+            capabilities["tools"] = toolsCapability; // Indicate tool support
             initResult["capabilities"] = capabilities;
 
             sendResponse(initResult);
@@ -48,16 +50,47 @@ namespace Mcp.Editor.Commands
             var toolsResult = new JSONObject();
             var toolsArray = new JSONArray();
 
-            foreach (var tool in ToolRegistry.GetAllTools())
+            string cursorStr = string.Empty;
+            if (request["params"] is JSONObject reqObj && reqObj.HasKey("cursor"))
             {
-                var toolJson = new JSONObject();
-                toolJson["name"] = tool.Name;
-                toolJson["description"] = tool.Description;
-                toolJson["inputSchema"] = tool.InputSchema;
-                toolsArray.Add(toolJson);
+                cursorStr = reqObj["cursor"].Value;
+            }
+
+            int startIndex = 0;
+            if (!string.IsNullOrEmpty(cursorStr))
+            {
+                int.TryParse(cursorStr, out startIndex);
+            }
+
+            int count = 0;
+            int limit = 20;
+
+            var allTools = ToolRegistry.GetAllTools();
+            int totalTools = 0;
+            foreach (var _ in allTools) totalTools++;
+
+            int i = 0;
+            foreach (var tool in allTools)
+            {
+                if (i >= startIndex && count < limit)
+                {
+                    var toolJson = new JSONObject();
+                    toolJson["name"] = tool.Name;
+                    toolJson["description"] = tool.Description;
+                    toolJson["inputSchema"] = tool.InputSchema;
+                    toolsArray.Add(toolJson);
+                    count++;
+                }
+                i++;
             }
 
             toolsResult["tools"] = toolsArray;
+
+            if (startIndex + count < totalTools)
+            {
+                toolsResult["nextCursor"] = (startIndex + count).ToString();
+            }
+
             sendResponse(toolsResult);
         }
     }
@@ -80,14 +113,41 @@ namespace Mcp.Editor.Commands
 
             if (ToolRegistry.TryGetTool(toolName, out ITool tool))
             {
+                bool isCompleted = false;
+                object lockObj = new object();
+
+                var timer = new System.Threading.Timer((state) =>
+                {
+                    lock (lockObj)
+                    {
+                        if (!isCompleted)
+                        {
+                            isCompleted = true;
+                            sendError(JsonRpc.InternalError, $"Tool execution timed out ({toolName}) after 30 seconds");
+                        }
+                    }
+                }, null, 30000, System.Threading.Timeout.Infinite);
+
+                Action<JSONObject> wrappedResponse = (r) =>
+                {
+                    lock (lockObj) { if (isCompleted) return; isCompleted = true; timer.Dispose(); }
+                    sendResponse(r);
+                };
+
+                Action<string> wrappedError = (msg) =>
+                {
+                    lock (lockObj) { if (isCompleted) return; isCompleted = true; timer.Dispose(); }
+                    sendError(JsonRpc.InternalError, msg);
+                };
+
                 try
                 {
-                    tool.Execute(toolArgs, sendResponse, errMsg => sendError(JsonRpc.InternalError, errMsg));
+                    tool.Execute(toolArgs, wrappedResponse, errMsg => wrappedError(errMsg));
                 }
                 catch (Exception e)
                 {
                     Util.Logging.LogException(e, $"Tool Execution ({toolName})");
-                    sendError(JsonRpc.InternalError, $"Error executing tool {toolName}: {e.Message}");
+                    wrappedError($"Error executing tool {toolName}: {e.Message}");
                 }
             }
             else

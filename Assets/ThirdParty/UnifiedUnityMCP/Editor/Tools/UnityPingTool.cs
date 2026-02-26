@@ -13,15 +13,18 @@ namespace Mcp.Editor.Tools
 
         public void Execute(JSONObject arguments, Action<JSONObject> sendResponse, Action<string> sendError)
         {
-            try
+            Util.MainThreadDispatcher.InvokeAsync(() =>
             {
-                string resultText = $"pong! Unity Version: {Application.unityVersion}, Platform: {Application.platform}";
-                sendResponse(McpMessages.CreateToolResult(resultText));
-            }
-            catch (Exception e)
-            {
-                sendError($"Ping failed: {e.Message}");
-            }
+                try
+                {
+                    string resultText = $"pong! Unity Version: {Application.unityVersion}, Platform: {Application.platform}";
+                    sendResponse(McpMessages.CreateToolResult(resultText));
+                }
+                catch (Exception e)
+                {
+                    sendError($"Ping failed: {e.Message}");
+                }
+            });
         }
     }
 }

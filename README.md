@@ -34,7 +34,7 @@ Main instruction skills (Prompts & Skills) that teach AI the best architectural 
 
 ---
 
-## 🛠 The Grand Unity Hierarchy (unity-skills-index)
+## 🛠 The Grand Unity Hierarchy
 A giant educational reference manual divided into 35+ micro-skills. **Important:** The AI uses these knowledges as a *"What to do" reference*, but it automatically *translates* commands via the Unified Unity MCP Server using a special mapping table.
 
 | Sub-Skill | Description (Area of Responsibility) |
@@ -73,13 +73,13 @@ Below are examples of perfect queries (prompts). They allow the AI to use the em
 - `Use the MCP 'unity.console.read' tool to monitor my scene for 10 seconds. Identify if any scripts are wildly spamming Debug.Log and causing CPU bottlenecks.`
 - `I have 30 identical trees in the scene. Use the MCP tools to find them all by their 'Tree' tag, and parent them under a single empty 'Environment' GameObject to clean up the hierarchy.`
 
-### 🛠️ Scene and Object Manipulations (`unity-skills-index`)
+### 🛠️ Scene and Object Manipulations
 - `Use the 'unity.gameobject.find' tool to find the GameObject named 'PlayerSpotlight'. Then use 'unity.component.property' to dynamically change its Light intensity to 12.5 and its color to pure Red.`
 - `I need to set up a Cinemachine Virtual Camera focusing on the Player. Instantiate the VCam prefab, then use reflection to set its Follow and LookAt targets to the Player's instanceId.`
 - `Check the 'unity.editor.state'. If it is not compiling, trigger a full 'unity.test.run' on PlayMode. Output the results of any failed tests.`
 - `Use the 'unity.asset.create' tool to scaffold 3 new empty folders in my project: Assets/Art/Characters, Assets/Audio/SFX, and Assets/Data/Configs.`
 - `Find all GameObjects with the 'BoxCollider' component attached. For each one, use 'unity.component.property' to set their 'isTrigger' boolean to true.`
-- `Read the instructions in 'unity-skills-index/navmesh' to understand the parameters. Then, bake a new navigation mesh for the current scene geometry.`
+- `Use the 'unity_navmesh' MCP tool to bake a new navigation mesh for the current scene geometry.`
 - `Save my current scene using 'unity.scene.manage', then open 'Assets/Scenes/Level_02.unity'. Once opened, find the 'SpawnPoint' object and move it to coordinates 10, 0, 50.`
 
 ---

@@ -5,6 +5,7 @@ using Mcp.Editor.Transport;
 using Mcp.Editor.Util;
 using SimpleJSON;
 using UnityEditor;
+using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace Mcp.Editor
@@ -15,13 +16,52 @@ namespace Mcp.Editor
     [InitializeOnLoad]
     public static class UnityMcpServer
     {
+        private const string PortKey = "MCP.Port";
+        private const string SessionKey = "MCP.SessionId";
+        private const int DefaultPort = 18008;
+
         private static StreamableHttpTransport _transport;
         private static bool _isRunning;
         public static bool IsRunning => _isRunning;
 
+        static UnityMcpServer()
+        {
+            AssemblyReloadEvents.beforeAssemblyReload -= Stop;
+            AssemblyReloadEvents.beforeAssemblyReload += Stop;
+            EditorApplication.quitting -= Stop;
+            EditorApplication.quitting += Stop;
+        }
+
+        private static int GetOrCreatePort()
+        {
+            int port = SessionState.GetInt(PortKey, 0);
+            if (port > 0) return port;
+
+            port = EditorPrefs.GetInt(PortKey, 0);
+            if (port <= 0) port = DefaultPort;
+
+            SessionState.SetInt(PortKey, port);
+            EditorPrefs.SetInt(PortKey, port);
+            return port;
+        }
+
+        private static string GetOrCreateSessionId()
+        {
+            string id = SessionState.GetString(SessionKey, string.Empty);
+            if (!string.IsNullOrEmpty(id)) return id;
+
+            id = EditorPrefs.GetString(SessionKey, string.Empty);
+            if (string.IsNullOrEmpty(id)) id = Guid.NewGuid().ToString("N");
+
+            SessionState.SetString(SessionKey, id);
+            EditorPrefs.SetString(SessionKey, id);
+            return id;
+        }
+
         public static void Start()
         {
             if (_isRunning) return;
+            if (EditorApplication.isCompiling) return;
 
             MainThreadDispatcher.Initialize();
 
@@ -53,8 +93,19 @@ namespace Mcp.Editor
             ToolRegistry.Register(new TestRunTool());
             ToolRegistry.Register(new BuildManageTool());
 
+            // Skill module tools
+            foreach (var moduleTool in UnitySkillModuleTools.CreateAll())
+            {
+                ToolRegistry.Register(moduleTool);
+            }
+
+            // Get host configs
+            int port = GetOrCreatePort();
+            string sessionId = GetOrCreateSessionId();
+            string urlPrefix = $"http://127.0.0.1:{port}/mcp/";
+
             // Start transport
-            _transport = new StreamableHttpTransport("http://127.0.0.1:18008/mcp/", "/mcp");
+            _transport = new StreamableHttpTransport(urlPrefix, "/mcp", port, sessionId);
             _transport.OnMessageReceived = CommandRegistry.HandleRequest;
             _transport.Start();
 

@@ -138,16 +138,39 @@ namespace Mcp.Editor.Tools
 
         private string GetPropertyValueAsString(SerializedProperty prop)
         {
-            switch (prop.propertyType)
+            if (prop.propertyType == SerializedPropertyType.Integer)
             {
-                case SerializedPropertyType.Integer: return prop.intValue.ToString();
-                case SerializedPropertyType.Boolean: return prop.boolValue.ToString();
-                case SerializedPropertyType.Float: return prop.floatValue.ToString();
-                case SerializedPropertyType.String: return prop.stringValue;
-                case SerializedPropertyType.Enum: return prop.enumNames.Length > prop.enumValueIndex && prop.enumValueIndex >= 0 ? prop.enumNames[prop.enumValueIndex] : prop.enumValueIndex.ToString();
-                case SerializedPropertyType.ObjectReference: return prop.objectReferenceValue != null ? prop.objectReferenceValue.name : "null";
-                default: return $"[{prop.propertyType}]";
+                return prop.intValue.ToString();
             }
+
+            if (prop.propertyType == SerializedPropertyType.Boolean)
+            {
+                return prop.boolValue.ToString();
+            }
+
+            if (prop.propertyType == SerializedPropertyType.Float)
+            {
+                return prop.floatValue.ToString();
+            }
+
+            if (prop.propertyType == SerializedPropertyType.String)
+            {
+                return prop.stringValue;
+            }
+
+            if (prop.propertyType == SerializedPropertyType.Enum)
+            {
+                return prop.enumNames.Length > prop.enumValueIndex && prop.enumValueIndex >= 0
+                    ? prop.enumNames[prop.enumValueIndex]
+                    : prop.enumValueIndex.ToString();
+            }
+
+            if (prop.propertyType == SerializedPropertyType.ObjectReference)
+            {
+                return prop.objectReferenceValue != null ? prop.objectReferenceValue.name : "null";
+            }
+
+            return $"[{prop.propertyType}]";
         }
 
         private bool SetPropertyValue(SerializedProperty prop, JSONNode node, out string error)
@@ -155,41 +178,52 @@ namespace Mcp.Editor.Tools
             error = null;
             try
             {
-                switch (prop.propertyType)
+                if (prop.propertyType == SerializedPropertyType.Integer)
                 {
-                    case SerializedPropertyType.Integer:
-                        prop.intValue = node.AsInt;
-                        return true;
-                    case SerializedPropertyType.Boolean:
-                        prop.boolValue = node.AsBool;
-                        return true;
-                    case SerializedPropertyType.Float:
-                        prop.floatValue = node.AsFloat;
-                        return true;
-                    case SerializedPropertyType.String:
-                        prop.stringValue = node.Value;
-                        return true;
-                    case SerializedPropertyType.Enum:
-                        // Try string map first
-                        string strVal = node.Value;
-                        int idx = Array.IndexOf(prop.enumNames, strVal);
-                        if (idx >= 0)
-                        {
-                            prop.enumValueIndex = idx;
-                            return true;
-                        }
-                        // Fallback to integer
-                        if (int.TryParse(strVal, out int intVal))
-                        {
-                            prop.enumValueIndex = intVal;
-                            return true;
-                        }
-                        error = $"Invalid enum value '{strVal}'. Valid names: {string.Join(", ", prop.enumNames)}";
-                        return false;
-                    default:
-                        error = $"Setting properties of type {prop.propertyType} is not supported directly. Needs raw file parse.";
-                        return false;
+                    prop.intValue = node.AsInt;
+                    return true;
                 }
+
+                if (prop.propertyType == SerializedPropertyType.Boolean)
+                {
+                    prop.boolValue = node.AsBool;
+                    return true;
+                }
+
+                if (prop.propertyType == SerializedPropertyType.Float)
+                {
+                    prop.floatValue = node.AsFloat;
+                    return true;
+                }
+
+                if (prop.propertyType == SerializedPropertyType.String)
+                {
+                    prop.stringValue = node.Value;
+                    return true;
+                }
+
+                if (prop.propertyType == SerializedPropertyType.Enum)
+                {
+                    string strVal = node.Value;
+                    int idx = Array.IndexOf(prop.enumNames, strVal);
+                    if (idx >= 0)
+                    {
+                        prop.enumValueIndex = idx;
+                        return true;
+                    }
+
+                    if (int.TryParse(strVal, out int intVal))
+                    {
+                        prop.enumValueIndex = intVal;
+                        return true;
+                    }
+
+                    error = $"Invalid enum value '{strVal}'. Valid names: {string.Join(", ", prop.enumNames)}";
+                    return false;
+                }
+
+                error = $"Setting properties of type {prop.propertyType} is not supported directly. Needs raw file parse.";
+                return false;
             }
             catch (Exception e)
             {
