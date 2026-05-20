@@ -14,13 +14,13 @@ This project was built from scratch using clean KISS architecture, avoiding thir
 
 ## Installation / Usage
 
-The server is placed entirely inside `Assets/mcp/Editor`.
+The server is placed entirely inside `Assets/ThirdParty/UnifiedUnityMCP/Editor`.
 It is configured to auto-start and runs on **http://127.0.0.1:18008/mcp**.
 
 ### Editor Controls
 A toolbar toggle button labeled **MCP** is automatically injected into the Unity Play Toolbar. 
 *   **Green**: Server is running.
-*   **Default**: Server is stopped.
+*   **Default/gray**: Server is stopped.
 
 You can also control the server via the top menu:
 *   `MCP` -> `Start Server`
@@ -45,7 +45,7 @@ In a separate terminal, test the initialize handshake (using JSON-RPC 2.0):
 ```bash
 curl -X POST http://127.0.0.1:18008/mcp \
      -H "Content-Type: application/json" \
-     -d '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": { "protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "curl", "version": "1.0"} }}'
+     -d '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": { "protocolVersion": "2025-03-26", "capabilities": {}, "clientInfo": {"name": "curl", "version": "1.0"} }}'
 ```
 
 ### 3. List Tools (POST)

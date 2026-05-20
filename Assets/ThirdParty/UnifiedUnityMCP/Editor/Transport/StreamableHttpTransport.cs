@@ -46,9 +46,9 @@ namespace Mcp.Editor.Transport
             if (localhostPrefix != urlPrefix) _listener.Prefixes.Add(localhostPrefix);
         }
 
-        public void Start()
+        public bool Start()
         {
-            if (_isRunning) return;
+            if (_isRunning) return true;
             try
             {
                 _listener.Start();
@@ -61,10 +61,14 @@ namespace Mcp.Editor.Transport
                 _keepAliveThread.Start();
 
                 Logging.Log($"Transport started listening on {_endpointUrl}");
+                return true;
             }
             catch (Exception e)
             {
+                _isRunning = false;
+                try { _listener.Stop(); } catch { }
                 Logging.LogException(e, "Transport Start");
+                return false;
             }
         }
 

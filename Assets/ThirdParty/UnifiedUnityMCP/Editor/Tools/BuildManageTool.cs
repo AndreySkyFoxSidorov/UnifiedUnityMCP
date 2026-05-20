@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using Mcp.Editor.Protocol;
 using Mcp.Editor.Util;
@@ -67,9 +68,38 @@ namespace Mcp.Editor.Tools
                         string pathStr = arguments.GetString("buildPath", "Builds/App");
 
                         BuildTarget bTarget = EditorUserBuildSettings.activeBuildTarget;
-                        if (!string.IsNullOrEmpty(targetStr) && Enum.TryParse(targetStr, true, out BuildTarget parsedTarget))
+                        if (!string.IsNullOrEmpty(targetStr))
                         {
+                            if (!Enum.TryParse(targetStr, true, out BuildTarget parsedTarget) ||
+                                !Enum.IsDefined(typeof(BuildTarget), parsedTarget) ||
+                                parsedTarget == BuildTarget.NoTarget)
+                            {
+                                sendError($"Invalid buildTarget '{targetStr}'.");
+                                return;
+                            }
+
                             bTarget = parsedTarget;
+                        }
+
+                        if (string.IsNullOrWhiteSpace(pathStr))
+                        {
+                            sendError("Missing 'buildPath'.");
+                            return;
+                        }
+
+                        if (Path.IsPathRooted(pathStr))
+                        {
+                            sendError("buildPath must be project-relative.");
+                            return;
+                        }
+
+                        string normalizedBuildPath = pathStr.Replace("\\", "/");
+                        string projectRoot = Path.GetFullPath(Path.GetDirectoryName(UnityEngine.Application.dataPath) ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        string fullBuildPath = Path.GetFullPath(Path.Combine(projectRoot, normalizedBuildPath));
+                        if (!fullBuildPath.StartsWith(projectRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                        {
+                            sendError("buildPath must stay inside the project folder.");
+                            return;
                         }
 
                         var scenes = EditorBuildSettings.scenes.Where(s => s.enabled).Select(s => s.path).ToArray();
@@ -79,7 +109,7 @@ namespace Mcp.Editor.Tools
                             return;
                         }
 
-                        var report = BuildPipeline.BuildPlayer(scenes, pathStr, bTarget, BuildOptions.None);
+                        var report = BuildPipeline.BuildPlayer(scenes, normalizedBuildPath, bTarget, BuildOptions.None);
 
                         var res = new JSONObject();
                         res["result"] = report.summary.result.ToString();

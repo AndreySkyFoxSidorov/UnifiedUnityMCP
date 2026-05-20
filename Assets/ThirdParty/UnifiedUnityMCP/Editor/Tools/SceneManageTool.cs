@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Mcp.Editor.Protocol;
 using Mcp.Editor.Util;
 using SimpleJSON;
@@ -82,9 +83,31 @@ namespace Mcp.Editor.Tools
                             return;
                         }
 
+                        string normalizedPath = path.Replace("\\", "/");
+                        if (!normalizedPath.StartsWith("Assets/", StringComparison.OrdinalIgnoreCase) ||
+                            !normalizedPath.EndsWith(".unity", StringComparison.OrdinalIgnoreCase))
+                        {
+                            sendError("Scene path must be an Assets/*.unity path.");
+                            return;
+                        }
+
+                        string assetRoot = Path.GetFullPath(UnityEngine.Application.dataPath).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        string fullPath = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(UnityEngine.Application.dataPath) ?? string.Empty, normalizedPath));
+                        if (!fullPath.StartsWith(assetRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                        {
+                            sendError("Scene path must stay inside the Assets folder.");
+                            return;
+                        }
+
+                        if (!File.Exists(fullPath))
+                        {
+                            sendError($"Scene file not found: {normalizedPath}");
+                            return;
+                        }
+
                         if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                         {
-                            var scene = EditorSceneManager.OpenScene(path, OpenSceneMode.Single);
+                            var scene = EditorSceneManager.OpenScene(normalizedPath, OpenSceneMode.Single);
                             sendResponse(McpMessages.CreateToolResult($"{{\"status\":\"Opened\", \"path\":\"{scene.path}\", \"isValid\":{scene.IsValid().ToString().ToLower()}}}"));
                         }
                         else

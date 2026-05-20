@@ -107,7 +107,12 @@ namespace Mcp.Editor
             // Start transport
             _transport = new StreamableHttpTransport(urlPrefix, "/mcp", port, sessionId);
             _transport.OnMessageReceived = CommandRegistry.HandleRequest;
-            _transport.Start();
+            if (!_transport.Start())
+            {
+                _transport = null;
+                MainThreadDispatcher.Shutdown();
+                return;
+            }
 
             _isRunning = true;
         }

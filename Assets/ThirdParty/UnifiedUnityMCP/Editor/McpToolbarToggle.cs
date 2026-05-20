@@ -1,4 +1,4 @@
-// Assets/mcp/Editor/McpToolbarToggle.cs
+// Assets/ThirdParty/UnifiedUnityMCP/Editor/McpToolbarToggle.cs
 
 using System;
 using UnityEditor;
@@ -16,15 +16,15 @@ using UnityEngine.UIElements;
 [InitializeOnLoad]
 public static class McpToolbarToggle
 {
-    private const string PrefKey = "SF_MCP_Running";
+    private const string PrefKey = "UnifiedUnityMCP.Running";
     private const string Label = "MCP";
 
 #if UNITY_6000_0_OR_NEWER
-    private const string ToolbarId = "SkyFox/MCP Toggle";
+    private const string ToolbarId = "UnifiedUnityMCP/MCP Toggle";
 #endif
 
 #if !UNITY_6000_0_OR_NEWER
-    private const string ButtonName = "SF_MCP_Toggle_Button";
+    private const string ButtonName = "UnifiedUnityMCP_Toggle_Button";
     private static bool _installed;
     private static Button _legacyButton;
 #endif
@@ -104,8 +104,8 @@ public static class McpToolbarToggle
     private static string GetColoredLabel()
     {
         if (_isRunning)
-            return $"<color=#FF3333><b>{Label}</b></color>"; // Red when running
-        return $"<color=#33FF33>{Label}</color>"; // Green when off
+            return $"<color=#33AA33><b>{Label}</b></color>";
+        return $"<color=#666666>{Label}</color>";
     }
 
 #if UNITY_6000_0_OR_NEWER
@@ -203,13 +203,13 @@ public static class McpToolbarToggle
 
         if (_isRunning)
         {
-            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.8f, 0.2f, 0.2f, 1f));
+            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.2f, 0.65f, 0.25f, 1f));
             _legacyButton.style.color = new StyleColor(Color.white);
         }
         else
         {
-            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.2f, 0.8f, 0.2f, 1f));
-            _legacyButton.style.color = new StyleColor(Color.black);
+            _legacyButton.style.backgroundColor = new StyleColor(new Color(0.28f, 0.28f, 0.28f, 1f));
+            _legacyButton.style.color = new StyleColor(Color.white);
         }
     }
 

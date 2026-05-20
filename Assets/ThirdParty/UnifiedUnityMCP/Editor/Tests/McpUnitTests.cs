@@ -3,11 +3,38 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using SimpleJSON;
 using Mcp.Editor.Commands;
+using Mcp.Editor.Protocol;
+using Mcp.Editor.Tools;
 
 namespace Mcp.Editor.Tests
 {
     public class McpUnitTests
     {
+        private sealed class TestTool : ITool
+        {
+            private readonly string _name;
+
+            public TestTool(string name)
+            {
+                _name = name;
+            }
+
+            public string Name => _name;
+            public string Description => "Test tool";
+            public JSONObject InputSchema => McpMessages.CreateToolSchema(Name, Description, new JSONObject());
+
+            public void Execute(JSONObject arguments, Action<JSONObject> sendResponse, Action<string> sendError)
+            {
+                sendResponse(McpMessages.CreateToolResult("ok"));
+            }
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            ToolRegistry.Clear();
+        }
+
         [Test]
         public void InitializeCommand_SetsListChangedToFalse()
         {
@@ -35,6 +62,12 @@ namespace Mcp.Editor.Tests
         [Test]
         public void ToolsListCommand_PaginationWorks()
         {
+            ToolRegistry.Clear();
+            for (int i = 0; i < 25; i++)
+            {
+                ToolRegistry.Register(new TestTool("unity_test_tool_" + i));
+            }
+
             var command = new ToolsListCommand();
             
             // Request 1: No cursor

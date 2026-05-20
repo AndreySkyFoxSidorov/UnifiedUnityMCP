@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using NUnit.Framework;
 using UnityEngine;
@@ -12,12 +14,14 @@ namespace Mcp.Editor.Tests
     public class McpIntegrationTests
     {
         private StreamableHttpTransport _transport;
-        private string _url = "http://127.0.0.1:18008/mcp";
+        private string _url;
 
         [UnitySetUp]
         public IEnumerator SetUp()
         {
-            _transport = new StreamableHttpTransport("http://127.0.0.1:18008/", "/mcp", 18008, "test-session-id");
+            int port = GetFreePort();
+            _url = $"http://127.0.0.1:{port}/mcp";
+            _transport = new StreamableHttpTransport($"http://127.0.0.1:{port}/", "/mcp", port, "test-session-id");
             _transport.OnMessageReceived = delegate (JSONObject o, System.Action<JSONObject> r, System.Action<int, string> e)
             {
                 // mock command router
@@ -32,7 +36,7 @@ namespace Mcp.Editor.Tests
                 else if (method == "initialize") r(new JSONObject());
                 else r(new JSONObject());
             };
-            _transport.Start();
+            Assert.IsTrue(_transport.Start(), "Test transport failed to start.");
             yield return null;
         }
 
@@ -41,6 +45,15 @@ namespace Mcp.Editor.Tests
         {
             _transport?.Stop();
             yield return null;
+        }
+
+        private int GetFreePort()
+        {
+            var listener = new TcpListener(IPAddress.Loopback, 0);
+            listener.Start();
+            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            listener.Stop();
+            return port;
         }
 
         [UnityTest]

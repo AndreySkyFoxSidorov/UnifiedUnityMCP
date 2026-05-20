@@ -16,7 +16,7 @@ namespace Mcp.Editor.Commands
 
             var serverInfo = new JSONObject();
             serverInfo["name"] = "UnityMcpServer";
-            serverInfo["version"] = "2.0.0";
+            serverInfo["version"] = "2.1.0";
             initResult["serverInfo"] = serverInfo;
 
             var capabilities = new JSONObject();
@@ -109,7 +109,7 @@ namespace Mcp.Editor.Commands
             }
 
             string toolName = paramsNode["name"]?.Value;
-            var toolArgs = paramsNode["arguments"] as JSONObject;
+            var toolArgs = paramsNode["arguments"] as JSONObject ?? new JSONObject();
 
             if (ToolRegistry.TryGetTool(toolName, out ITool tool))
             {

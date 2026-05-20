@@ -4,410 +4,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Документація Бази Навичок та Сервера MCP (Unity)</title>
+    <title>Навички Unified Unity MCP</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --surface-color: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #38bdf8;
-            --border-color: #334155;
-            --badge-bg: #475569;
+            color-scheme: dark;
+            --background: #101419;
+            --surface: #171d24;
+            --text: #e7edf3;
+            --muted: #a8b3bf;
+            --accent: #4fb3ff;
+            --border: #2a3440;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
             margin: 0;
-            padding: 40px;
+            padding: 40px 24px;
+            background: var(--background);
+            color: var(--text);
+            font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.55;
+        }
+
+        main {
+            max-width: 1080px;
+            margin: 0 auto;
         }
 
         h1,
-        h2,
-        h3 {
-            color: var(--accent-color);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+        h2 {
+            margin: 0 0 16px;
+            line-height: 1.2;
         }
 
         h1 {
-            font-size: 2.5em;
-            text-align: center;
-            border: none;
+            font-size: 34px;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        h2 {
+            margin-top: 32px;
+            color: var(--accent);
+            font-size: 22px;
+        }
+
+        p {
+            color: var(--muted);
+        }
+
+        code {
+            background: #0b0f14;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            padding: 2px 5px;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
         }
 
         .card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-3px);
+            padding: 16px;
         }
 
         .card h3 {
-            margin-top: 0;
-            color: #fff;
-            border-bottom: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            margin: 0 0 8px;
+            font-size: 17px;
         }
 
-        .badge {
-            background-color: var(--badge-bg);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            color: #cbd5e1;
+        .card p {
+            margin: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+        ul {
+            padding-left: 22px;
         }
 
-        th,
-        td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: rgba(0, 0, 0, 0.2);
-            color: var(--accent-color);
-        }
-
-        .mcp-tools {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .mcp-tool {
-            background: rgba(56, 189, 248, 0.1);
-            border-left: 3px solid var(--accent-color);
-            padding: 10px 15px;
-        }
-
-        code {
-            background-color: #000;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-            color: #fca5a5;
-        }
-
-        .section-box {
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 40px;
-            border: 1px solid var(--border-color);
+        li {
+            margin: 6px 0;
         }
     </style>
 </head>
 
 <body>
+    <main>
+        <h1>Навички Unified Unity MCP</h1>
+        <p>
+            Активні правила для агентів тепер розміщені у кореневому <code>AGENTS.md</code>.
+            Активні навички розміщені у <code>skills/</code>. Приховані папки <code>.agent</code>
+            та <code>.gemini</code> використовуються лише для конфігурації клієнтів.
+        </p>
 
-    <div class="container">
-        <h1>🚀 База Знань та Навичок (Skills & MCP)</h1>
-        <p style="text-align: center; color: #94a3b8; font-size: 1.1em;">Глобальна інфраструктура для автоматизації
-            редактора Unity за допомогою Штучного Інтелекту (Antigravity & Unified MCP)</p>
+        <h2>Основний процес</h2>
+        <ul>
+            <li>Перед змінами коду або документації прочитати <code>AGENTS.md</code>.</li>
+            <li>Використовувати відповідні <code>skills/&lt;name&gt;/SKILL.md</code> як робочі інструкції.</li>
+            <li>Перед викликом MCP-інструментів перевіряти <code>active_tools.json</code> або <code>ToolsCatalog.md</code>.</li>
+            <li>Писати Unity C# просто, прямо і читабельно.</li>
+            <li>Не використовувати <code>switch</code> у коді або прикладах цього репозиторію.</li>
+        </ul>
 
-        <!-- MCP Server Section -->
-        <div class="section-box">
-            <h2>🔌 Unified Unity MCP Server</h2>
-            <p>Наш оптимізований сервер Model Context Protocol, який забезпечує прямий, безпечний та строго типізований
-                контроль над об'єктами Unity з чату штучного інтелекту.</p>
-
-            <div class="mcp-tools">
-                <div class="mcp-tool">
-                    <strong>unity.gameobject.*</strong><br>
-                    Пошук (включаючи повернення <code>instanceId</code>), створення (примітиви, порожні об'єкти) та
-                    видалення ієрархії GameObject-ів.
-                </div>
-                <div class="mcp-tool">
-                    <strong>unity.component.*</strong><br>
-                    Вищим рівень контролю: додавання компонентів, та маніпуляція властивостями через глубоку рефлексію
-                    C# (зміна координат, коллайдерів, кольорів, скриптів).
-                </div>
-                <div class="mcp-tool">
-                    <strong>unity.asset.*</strong><br>
-                    Безпосередня зміна <code>.meta</code> файлів (наприклад, стиснення текстур, імідж-фільтри) без
-                    парсингу YAML, а також пошук по AssetDatabase.
-                </div>
-                <div class="mcp-tool">
-                    <strong>unity.scene.* / unity.prefab.*</strong><br>
-                    Збереження/відкриття сцен в редакторі. Інстанціювання існуючих префабів в активну сцену.
-                </div>
-                <div class="mcp-tool">
-                    <strong>unity.editor.*</strong><br>
-                    Перевірка стану редактора (чи не триває компіляція), натискання пунктів меню (Execute Menu), та
-                    зміна активного виділення (Selection).
-                </div>
-                <div class="mcp-tool">
-                    <strong>Інше (Тести, Логи, Білди)</strong><br>
-                    Запуск <code>unity_test_run</code>, ін'єкція #define символів через <code>unity_build_manage</code>,
-                    моніторинг логів через <code>unity_console_read</code>.
-                </div>
-            </div>
+        <h2>Основні навички</h2>
+        <div class="grid">
+            <section class="card">
+                <h3><code>unified-unity-mcp</code></h3>
+                <p>Використання та підтримка Unity MCP сервера, каталогу інструментів і робочих процесів.</p>
+            </section>
+            <section class="card">
+                <h3><code>csharp-code-style</code></h3>
+                <p>Застосування стилю C# та правил форми методів для цього репозиторію.</p>
+            </section>
+            <section class="card">
+                <h3><code>unity-csharp-fundamentals</code></h3>
+                <p>Безпечний Unity-код для компонентів, ScriptableObject та Editor-інструментів.</p>
+            </section>
+            <section class="card">
+                <h3><code>unity-developer</code></h3>
+                <p>Розробка функцій пакета Unity MCP у наявній архітектурі.</p>
+            </section>
+            <section class="card">
+                <h3><code>unity-testrunner</code></h3>
+                <p>Запуск та аналіз перевірок Unity Test Framework.</p>
+            </section>
         </div>
 
-        <!-- Core Skills Section -->
-        <div class="section-box">
-            <h2>🧠 Модулі Розробки (Core Developer Skills)</h2>
-            <p>Головні навички-інструкції (Prompts & Skills), які навчають ШІ кращим архітектурним практикам розробки на
-                Unity та C#.</p>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>csharp-pro <span class="badge">C# 9.0+</span></h3>
-                    <p>Навчає ШІ сучасному C#: використання records, pattern matching, оптимізації пам'яті (span, value
-                        types), та принципам SOLID.</p>
-                </div>
-                <div class="card">
-                    <h3>csharp-async-patterns <span class="badge">Async/Await</span></h3>
-                    <p>Суворі стандарти асинхронності: правильне скасування через <code>CancellationToken</code>,
-                        використання <code>ConfigureAwait</code>, уникання <code>async void</code>.</p>
-                </div>
-                <div class="card">
-                    <h3>unity-developer <span class="badge">Архітектура</span></h3>
-                    <p>Керівник розробки. Компонентний підхід, кешування через <code>TryGetComponent</code>,
-                        використання Addressables, ScriptableObjects та патернів State-машин.</p>
-                </div>
-                <div class="card">
-                    <h3>unity-async <span class="badge">Unity Threading</span></h3>
-                    <p>Особливості потоків в Unity. Делегування корутин (legacy) та Task'ів (modern), забезпечення
-                        викликів Unity API суворо на Main Thread.</p>
-                </div>
-                <div class="card">
-                    <h3>unity-performance & mobile <span class="badge">Оптимізація</span></h3>
-                    <p>Оптимізація FPS для смартфонів. Використання IL2CPP, батчингу малювання (Draw Calls & SRP
-                        Batcher), Occlusion Culling, та стиснення текстур (ASTC/ETC2).</p>
-                </div>
-                <div class="card">
-                    <h3>unity-collection-pool <span class="badge">Zero-Allocation</span></h3>
-                    <p>Навичка, яка налаштовує ШІ повністю уникати просадок Garbage Collection (сміттєзбирача)
-                        використовуючи ListPool, DictionaryPool зі <code>UnityEngine.Pool</code>.</p>
-                </div>
-            </div>
+        <h2>Фокусні навички</h2>
+        <div class="grid">
+            <section class="card">
+                <h3><code>csharp-async-patterns</code></h3>
+                <p>Async, cancellation, HTTP та межі головного потоку Unity.</p>
+            </section>
+            <section class="card">
+                <h3><code>csharp-xml-docs</code></h3>
+                <p>Коротка XML-документація для публічних API та неочевидної поведінки.</p>
+            </section>
+            <section class="card">
+                <h3><code>unity-performance</code></h3>
+                <p>Вимірювана оптимізація Unity без зайвої архітектури.</p>
+            </section>
+            <section class="card">
+                <h3><code>unity-ui</code></h3>
+                <p>Інструкції для реалізації та перевірки UGUI і UI Toolkit.</p>
+            </section>
+            <section class="card">
+                <h3><code>skill-creator</code></h3>
+                <p>Створення та підтримка коротких навичок, що відповідають репозиторію.</p>
+            </section>
         </div>
 
-        <!-- UI & Presentation Section -->
-        <div class="section-box">
-            <h2>🎨 Навички Інтерфейсу (UI & UI Automation)</h2>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>unity-ui-creator <span class="badge">Верстка GUI</span></h3>
-                    <p>Абсолютний експерт з верстки Screen/HUD/Меню у Unity. Вчить створювати правильну ієрархію Canvas
-                        з якорями (Anchors), адаптувати під різні екрани (Landscape/Portrait, вирізи) та уникати
-                        "моргання" Layout'ів.</p>
-                </div>
-                <div class="card">
-                    <h3>unity-ui-layout-automation <span class="badge">Авто-валідація</span></h3>
-                    <p>Скрипти та інструкції для автоматичної валідації Canvas-структури, додавання локалізації на
-                        текст, та перевірки наявності анімацій через MCP.</p>
-                </div>
-                <div class="card">
-                    <h3>unity-textmeshpro <span class="badge">Типографіка</span></h3>
-                    <p>Глибокі знання профілювання TMPro: створення Font Assets, збагачений текст (Rich Text), матеріали
-                        для тіней/підсвітки.</p>
-                </div>
-                <div class="card">
-                    <h3>csharp-xml-docs <span class="badge">Документація</span></h3>
-                    <p>Суворий стандарт автоматичної XML-документації: створення чітких <code>summary</code>,
-                        <code>param</code>, <code>returns</code> чистою англійською без зайвої води (Haiku Style).
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- The 52 Tools Catalog Section -->
-        <div class="section-box">
-            <h2>🛠 Повний Каталог Інструментів MCP (52 Тулзи)</h2>
-            <p>Сервер безпосередньо надає рівно <strong>52 спеціалізовані інструменти Unity</strong>, щоб ШІ міг
-                маніпулювати редактором. Вони поділені на <strong>16 Базових Тулзів (Core)</strong> (прямі,
-                високопродуктивні обгортки API) та <strong>36 Модульних Тулзів (Modules)</strong> (високорівневі доменні
-                процеси).</p>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Категорія</th>
-                        <th>MCP Інструменти</th>
-                        <th>Опис (Зона відповідальності)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Базові Утиліти</strong></td>
-                        <td><code>unity_ping</code>, <code>unity_console_read</code>, <code>unity_editor_state</code>,
-                            <code>unity_editor_set_state</code>, <code>unity_selection_get</code>,
-                            <code>unity_editor_execute_menu</code></td>
-                        <td>Керування Play/Pause редактора, перевірка компіляції, читання консолі, аналіз поточного
-                            виділення.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Базові Об'єкти та Ассети</strong></td>
-                        <td><code>unity_gameobject_manage</code>, <code>unity_component_manage</code>,
-                            <code>unity_component_property</code>, <code>unity_asset_manage</code>,
-                            <code>unity_prefab_instantiate</code>, <code>unity_scene_manage</code>,
-                            <code>unity_asset_create</code>, <code>unity_asset_meta</code></td>
-                        <td>Глибока модифікація компонентів через рефлексію, інстанціювання префабів, відкриття
-                            сцен/ассетів, пряма маніпуляція .meta файлами.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Базові Розширені</strong></td>
-                        <td><code>unity_test_run</code>, <code>unity_build_manage</code></td>
-                        <td>Запуск EditMode/PlayMode автотестів, оновлення Scripting Defines для білдів.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Модуль: Сцена та Ієрархія</strong></td>
-                        <td><code>unity_scene</code>, <code>unity_gameobject</code>, <code>unity_component</code>,
-                            <code>unity_prefab</code>, <code>unity_bookmark</code>, <code>unity_history</code>,
-                            <code>unity_smart</code>, <code>unity_workflow</code></td>
-                        <td>Високорівневий запит та фільтрація сцени, історія undo/redo редактора, збережені виділення,
-                            розумні операції компонування.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Модуль: Ассети та Проєкт</strong></td>
-                        <td><code>unity_asset</code>, <code>unity_importer</code>, <code>unity_package</code>,
-                            <code>unity_project</code>, <code>unity_script</code>, <code>unity_scriptableobject</code>,
-                            <code>unity_shader</code>, <code>unity_material</code></td>
-                        <td>Сканування пакетів, генерація C# файлів, шаблони Scriptable Object, управління матеріалами
-                            та шейдерами.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Модуль: Рендеринг та UI</strong></td>
-                        <td><code>unity_ui</code>, <code>unity_camera</code>, <code>unity_cinemachine</code>,
-                            <code>unity_light</code>, <code>unity_animator</code>, <code>unity_timeline</code>,
-                            <code>unity_perception</code></td>
-                        <td>Побудова Canvas, віртуальні камери та кат-сцени, таймлайн треки, налаштування освітлення,
-                            просторове сприйняття.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Модуль: Системи</strong></td>
-                        <td><code>unity_physics</code>, <code>unity_navmesh</code>, <code>unity_terrain</code>,
-                            <code>unity_event</code></td>
-                        <td>Raycast, налаштування коллайдерів, запікання шляхів для ШІ, генерація Terrain, підключення
-                            UnityEvent.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Модуль: Якість</strong></td>
-                        <td><code>unity_cleaner</code>, <code>unity_debug</code>, <code>unity_editor</code>,
-                            <code>unity_console</code>, <code>unity_optimization</code>, <code>unity_profiler</code>,
-                            <code>unity_test</code>, <code>unity_validation</code>, <code>unity_sample</code></td>
-                        <td>Пошук загублених скриптів/порожніх тек, вимірювання частоти кадрів, видалення мертвих
-                            текстур, процеси CI.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- 💡 English Prompts Examples Section -->
-        <div class="section-box">
-            <h2>💡 Приклади Ефективних Промптів (English Prompts)</h2>
-            <p>Нижче наведено 20 прикладів ідеальних запитів (промптів) англійською мовою. Вони дозволяють ШІ
-                максимально ефективно використовувати закладені навички (Skills) та Unified MCP сервер.</p>
-
-            <div class="grid" style="grid-template-columns: 1fr;">
-                <!-- UI & Canvas -->
-                <div class="card">
-                    <h3>🖥️ Навички UI та Верстки (unity-ui-creator, textmeshpro)</h3>
-                    <ul>
-                        <li><code>Use the 'unity-ui-creator' skill. Build a highly responsive "Settings Menu" screen in the UI scene. It should have a background panel, vertical layout group in the center, 3 buttons (Audio, Graphics, Gameplay), and a close button anchored to the top right. Test it on 16:9 and notch displays.</code>
-                        </li>
-                        <li><code>I need a ScrollView for an inventory system. Please structure the prefabs correctly, removing any unnecessary ContentSizeFitters to ensure 60fps scrolling.</code>
-                        </li>
-                        <li><code>Use 'unity-textmeshpro' to create a stylized "Game Over" title text. Apply a gold metallic material preset with a subtle drop shadow and ensure the font asset supports rich text formatting.</code>
-                        </li>
-                        <li><code>Validate my HUD canvas hierarchy using the 'unity-ui-layout-automation' checks. injected the missing UIAnimationBehaviour to the root if needed.</code>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Architecture & C# -->
-                <div class="card">
-                    <h3>🧩 Архітектура та C# (unity-developer, csharp-pro)</h3>
-                    <ul>
-                        <li><code>Act as a 'unity-developer'. I need to implement a state machine for my boss enemy. Use modern C# 9.0 features like pattern matching and switch expressions to handle phase transitions.</code>
-                        </li>
-                        <li><code>Refactor my DataService layer using 'csharp-async-patterns'. Remove all 'async void' methods except for UI click handlers, and ensure every web request properly accepts a CancellationToken.</code>
-                        </li>
-                        <li><code>Use 'unity-collection-pool' to rewrite my projectile spawner. Currently, it allocates a new List every frame. Replace it with ListPool from UnityEngine.Pool to eliminate Garbage Collection spikes completely.</code>
-                        </li>
-                        <li><code>Apply 'csharp-code-style' to the entirely of the CombatManager.cs script. Fix all naming conventions so that private fields use the 'm' prefix and booleans use the 'b' prefix.</code>
-                        </li>
-                        <li><code>Generate XML documentation for the IPlayerInventory interface using the 'csharp-xml-docs' Haiku style. Keep it concise, remove all redundant words, and use active voice.</code>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- Optimization & Mobile -->
-                <div class="card">
-                    <h3>🔋 Оптимізація та Mobile (unity-performance, unity-mobile)</h3>
-                    <ul>
-                        <li><code>Act as a 'unity-performance' expert. Use the MCP to check the materials on all Environment meshes and turn on GPU Instancing for all of them using reflection.</code>
-                        </li>
-                        <li><code>Review my project for mobile deployment using 'unity-mobile' standards. Check the Texture Importer settings using 'unity_asset_meta' and ensure large UI sprites are using ASTC 6x6 compression.</code>
-                        </li>
-                        <li><code>Use the MCP 'unity_console_read' tool to monitor my scene for 10 seconds. Identify if any scripts are wildly spamming Debug.Log and causing CPU bottlenecks.</code>
-                        </li>
-                        <li><code>I have 30 identical trees in the scene. Use the MCP tools to find them all by their 'Tree' tag, and parent them under a single empty 'Environment' GameObject to clean up the hierarchy.</code>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- The Grand Index (Scene, Prefabs, Editor) -->
-                <div class="card">
-                    <h3>🛠️ Маніпуляції зі Сценою та Об'єктами</h3>
-                    <ul>
-                        <li><code>Use the 'unity.gameobject.find' tool to find the GameObject named 'PlayerSpotlight'. Then use 'unity_component_property' to dynamically change its Light intensity to 12.5 and its color to pure Red.</code>
-                        </li>
-                        <li><code>I need to set up a Cinemachine Virtual Camera focusing on the Player. Instantiate the VCam prefab, then use reflection to set its Follow and LookAt targets to the Player's instanceId.</code>
-                        </li>
-                        <li><code>Check the 'unity_editor_state'. If it is not compiling, trigger a full 'unity_test_run' on PlayMode. Output the results of any failed tests.</code>
-                        </li>
-                        <li><code>Use the 'unity_asset_create' tool to scaffold 3 new empty folders in my project: Assets/Art/Characters, Assets/Audio/SFX, and Assets/Data/Configs.</code>
-                        </li>
-                        <li><code>Find all GameObjects with the 'BoxCollider' component attached. For each one, use 'unity_component_property' to set their 'isTrigger' boolean to true.</code>
-                        </li>
-                        <li><code>Use the 'unity_navmesh' MCP tool to bake a new navigation mesh for the current scene geometry.</code>
-                        </li>
-                        <li><code>Save my current scene using 'unity_scene_manage', then open 'Assets/Scenes/Level_02.unity'. Once opened, find the 'SpawnPoint' object and move it to coordinates 10, 0, 50.</code>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <p style="text-align: center; color: #64748b; font-size: 0.9em;">Згенеровано Штучним Інтелектом "Antigravity".
-            Дані актуальні та узгоджені з Unified MCP Architecture.</p>
-
-    </div>
-
+        <h2>Джерела для інструментів</h2>
+        <ul>
+            <li><code>Assets/ThirdParty/UnifiedUnityMCP/Editor/active_tools.json</code></li>
+            <li><code>Assets/ThirdParty/UnifiedUnityMCP/Editor/ToolsCatalog.md</code></li>
+            <li><code>skills/unified-unity-mcp/SKILL.md</code></li>
+        </ul>
+    </main>
 </body>
 
 </html>
